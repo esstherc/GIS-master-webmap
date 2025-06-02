@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive GIS Master's Programs Map</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style/main.css" />
+</head>
+
+<body>
+    <div class="header">
+        <h1><i class="fas fa-map-marked-alt"></i> GIS Master's Programs in the US</h1>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="stats" id="stats">
+                <h4><i class="fas fa-chart-bar"></i> Statistics</h4>
+                <div class="stat-item">
+                    <span>Total Institutions:</span>
+                    <span id="total-institutions">-</span>
+                </div>
+                <div class="stat-item">
+                    <span>Total Programs:</span>
+                    <span id="total-programs">-</span>
+                </div>
+                <div class="stat-item">
+                    <span>Visible:</span>
+                    <span id="visible-count">-</span>
+                </div>
+            </div>
+
+            <div class="legend">
+                <h4><i class="fas fa-info-circle"></i> Program Types</h4>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #3388ff;"></div>
+                    <span>Professional</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #ff3333;"></div>
+                    <span>Research</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #33ff33;"></div>
+                    <span>Mixed</span>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h3><i class="fas fa-filter"></i> Filters</h3>
+                
+                <div class="filter-group">
+                    <label for="state-filter">State:</label>
+                    <select id="state-filter">
+                        <option value="">All States</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="type-filter">Program Type:</label>
+                    <select id="type-filter">
+                        <option value="">All Types</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="location-filter">Format:</label>
+                    <select id="location-filter">
+                        <option value="">All Formats</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="search-filter">Search Institution:</label>
+                    <input type="text" id="search-filter" placeholder="Type to search...">
+                </div>
+
+                <button class="btn btn-primary" onclick="applyFilters()">
+                    <i class="fas fa-search"></i> Apply Filters
+                </button>
+                
+                <button class="btn btn-secondary" onclick="clearFilters()">
+                    <i class="fas fa-times"></i> Clear All
+                </button>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- PapaParse for CSV reading -->
+    <script src="https://unpkg.com/papaparse@5.3.0/papaparse.min.js"></script>
+
+    <script>
+        // Global variables
+        let map;
+        let markers = [];
+        let allData = [];
+        let institutionData = new Map();
+
+        // Color scheme for program types
+        const colorMap = {
+            'professional': '#3388ff',
+            'research': '#ff3333',
+            'mixed': '#33ff33',
+            'default': '#ffaa00'
+        };
+
+        // Initialize map
+        function initMap() {
+            map = L.map('map').setView([39.8283, -98.5795], 4);
+            
+            // Add Stadia Stamen Toner Lite basemap
+            L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.{ext}?api_key=a83e3eb2-e11a-4f18-8f4c-430515354603', {
+                minZoom: 0,
+                maxZoom: 20,
+                attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                ext: 'png'
+            }).addTo(map);
+        }
+
+        // Load and process data
+        async function loadData() {
+            try {
+                // Load program data - 调整路径
+                const programResponse = await fetch('data/all_msgis_institutions.csv');
+                const programText = await programResponse.text();
+                const programData = Papa.parse(programText, { header: true }).data;
+
+                // Load coordinates data 
+                const coordResponse = await fetch('data/universities_coordinates_all.csv');
+                const coordText = await coordResponse.text();
+                const coordData = Papa.parse(coordText, { header: true }).data;
+
+                // Merge data
+                allData = mergeData(programData, coordData);
+                processData();
+                createMarkers();
+                populateFilters();
+                updateStats();
+
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Error loading data. Please make sure the CSV files are available.');
+            }
+        }
+
+        // Merge program and coordinate data
+        function mergeData(programData, coordData) {
+            const coordMap = new Map();
+            coordData.forEach(coord => {
+                if (coord.Latitude && coord.Longitude) {
+                    coordMap.set(coord.University, {
+                        lat: parseFloat(coord.Latitude),
+                        lng: parseFloat(coord.Longitude),
+                        state: coord.State,
+                        city: coord.City,
+                        address: coord.Address
+                    });
+                }
+            });
+
+            return programData.filter(program => {
+                const coords = coordMap.get(program.Institution);
+                if (coords) {
+                    program.latitude = coords.lat;
+                    program.longitude = coords.lng;
+                    program.state = coords.state;
+                    program.city = coords.city;
+                    program.address = coords.address;
+                    return true;
+                }
+                return false;
+            });
+        }
+
+        // Process data to group by institution
+        function processData() {
+            institutionData.clear();
+
+            allData.forEach(program => {
+                const key = program.Institution;
+                if (!institutionData.has(key)) {
+                    institutionData.set(key, {
+                        institution: program.Institution,
+                        latitude: program.latitude,
+                        longitude: program.longitude,
+                        state: program.state,
+                        city: program.city,
+                        address: program.address,
+                        programs: []
+                    });
+                }
+
+                institutionData.get(key).programs.push({
+                    name: program.Program,
+                    link: program.link,
+                    type: program['program type'],
+                    graduation: program['graduation requirement'],
+                    duration: program.duration,
+                    location: program.location,
+                    institutionType: program['institution type']
+                });
+            });
+        }
+
+        // Create markers on map
+        function createMarkers() {
+            // Clear existing markers
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+
+            institutionData.forEach((data, institution) => {
+                // Determine primary program type for marker color
+                const programTypes = data.programs.map(p => p.type).filter(t => t);
+                const typeCounts = {};
+                programTypes.forEach(type => {
+                    typeCounts[type] = (typeCounts[type] || 0) + 1;
+                });
+
+                const primaryType = Object.keys(typeCounts).length > 0 
+                    ? Object.keys(typeCounts).reduce((a, b) => typeCounts[a] > typeCounts[b] ? a : b)
+                    : 'default';
+
+                // Create custom icon
+                const iconColor = colorMap[primaryType] || colorMap.default;
+                const customIcon = L.divIcon({
+                    className: 'custom-marker',
+                    html: `<div style="background-color: ${iconColor}; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"></div>`,
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                });
+
+                // Create popup content
+                const popupContent = createPopupContent(data);
+
+                // Create marker
+                const marker = L.marker([data.latitude, data.longitude], { icon: customIcon })
+                    .bindPopup(popupContent, { maxWidth: 450 })
+                    .addTo(map);
+
+                // Store additional data with marker
+                marker.institutionData = data;
+                markers.push(marker);
+            });
+        }
+
+        // Create popup content
+        function createPopupContent(data) {
+            let content = `
+                <div class="popup-content">
+                    <div class="popup-header">${data.institution}</div>
+                    <p><strong>State:</strong> ${data.state || 'N/A'}</p>
+                    <p><strong>City:</strong> ${data.city || 'N/A'}</p>
+                    <p><strong>Total Programs:</strong> ${data.programs.length}</p>
+                    <hr style="margin: 10px 0;">
+            `;
+
+            data.programs.forEach(program => {
+                const link = program.link && program.link !== 'N/A' ? program.link : '#';
+                const typeColor = colorMap[program.type] || colorMap.default;
+                
+                content += `
+                    <div class="program-item" style="border-left-color: ${typeColor};">
+                        <div class="program-title">
+                            <a href="${link}" target="_blank">${program.name || 'N/A'}</a>
+                        </div>
+                        <div class="program-details">
+                            <span><strong>Type:</strong> ${program.type || 'N/A'}</span>
+                            <span><strong>Format:</strong> ${program.location || 'N/A'}</span>
+                            <br>
+                            <span><strong>Duration:</strong> ${program.duration || 'N/A'}</span>
+                            <span><strong>Graduation:</strong> ${program.graduation || 'N/A'}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            content += '</div>';
+            return content;
+        }
+
+        // Populate filter dropdowns
+        function populateFilters() {
+            const states = new Set();
+            const types = new Set();
+            const locations = new Set();
+
+            allData.forEach(program => {
+                if (program.state) states.add(program.state);
+                if (program['program type']) types.add(program['program type']);
+                if (program.location) locations.add(program.location);
+            });
+
+            populateSelect('state-filter', Array.from(states).sort());
+            populateSelect('type-filter', Array.from(types).sort());
+            populateSelect('location-filter', Array.from(locations).sort());
+        }
+
+        // Helper function to populate select elements
+        function populateSelect(selectId, options) {
+            const select = document.getElementById(selectId);
+            options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.textContent = option;
+                select.appendChild(optionElement);
+            });
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const stateFilter = document.getElementById('state-filter').value;
+            const typeFilter = document.getElementById('type-filter').value;
+            const locationFilter = document.getElementById('location-filter').value;
+            const searchFilter = document.getElementById('search-filter').value.toLowerCase();
+
+            let visibleCount = 0;
+
+            markers.forEach(marker => {
+                const data = marker.institutionData;
+                let show = true;
+
+                // State filter
+                if (stateFilter && data.state !== stateFilter) {
+                    show = false;
+                }
+
+                // Type filter
+                if (typeFilter && !data.programs.some(p => p.type === typeFilter)) {
+                    show = false;
+                }
+
+                // Location filter
+                if (locationFilter && !data.programs.some(p => p.location === locationFilter)) {
+                    show = false;
+                }
+
+                // Search filter
+                if (searchFilter && !data.institution.toLowerCase().includes(searchFilter)) {
+                    show = false;
+                }
+
+                // Show/hide marker
+                if (show) {
+                    marker.addTo(map);
+                    visibleCount++;
+                } else {
+                    map.removeLayer(marker);
+                }
+            });
+
+            // Update visible count
+            document.getElementById('visible-count').textContent = visibleCount;
+        }
+
+        // Clear all filters
+        function clearFilters() {
+            document.getElementById('state-filter').value = '';
+            document.getElementById('type-filter').value = '';
+            document.getElementById('location-filter').value = '';
+            document.getElementById('search-filter').value = '';
+
+            // Show all markers
+            markers.forEach(marker => marker.addTo(map));
+            updateStats();
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('total-institutions').textContent = institutionData.size;
+            document.getElementById('total-programs').textContent = allData.length;
+            document.getElementById('visible-count').textContent = markers.length;
+        }
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
+            loadData();
+
+            // Add real-time search
+            document.getElementById('search-filter').addEventListener('input', applyFilters);
+        });
+    </script>
+</body>
+</html> 
