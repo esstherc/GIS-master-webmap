@@ -284,6 +284,18 @@ body {
         max-height: 300px;
     }
     
+    /* 让stats和legend并列显示 */
+    .stats-legend-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .stats, .legend {
+        flex: 1;
+        margin-bottom: 0;
+    }
+    
     .header h1 {
         font-size: 1.8em;
     }
@@ -298,6 +310,13 @@ body {
     
     .popup-content {
         max-width: 280px;
+    }
+    
+    /* 调整legend中点的大小 */
+    .legend-color {
+        width: 10px;
+        height: 10px;
+        margin-right: 6px;
     }
 }
 
@@ -315,6 +334,26 @@ body {
         max-height: 250px;
     }
     
+    /* 在很小的屏幕上保持并列 */
+    .stats-legend-container {
+        gap: 8px;
+    }
+    
+    .stats h4, .legend h4 {
+        font-size: 0.9em;
+        margin-bottom: 8px;
+    }
+    
+    .stat-item {
+        font-size: 12px;
+        margin-bottom: 3px;
+    }
+    
+    .legend-item {
+        margin-bottom: 4px;
+        font-size: 13px;
+    }
+    
     .filter-group select, 
     .filter-group input {
         padding: 6px 10px;
@@ -327,11 +366,14 @@ body {
     }
     
     .stats, .legend {
-        padding: 12px;
+        padding: 10px;
     }
     
-    .stat-item {
-        font-size: 13px;
+    /* 更小屏幕上进一步缩小点 */
+    .legend-color {
+        width: 8px;
+        height: 8px;
+        margin-right: 5px;
     }
 }
 

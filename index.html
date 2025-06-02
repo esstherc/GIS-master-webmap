@@ -23,35 +23,37 @@
 
     <div class="container">
         <div class="sidebar">
-            <div class="stats" id="stats">
-                <h4><i class="fas fa-chart-bar"></i> Statistics</h4>
-                <div class="stat-item">
-                    <span>Total Institutions:</span>
-                    <span id="total-institutions">-</span>
+            <div class="stats-legend-container">
+                <div class="stats" id="stats">
+                    <h4><i class="fas fa-chart-bar"></i> Statistics</h4>
+                    <div class="stat-item">
+                        <span>Total Institutions:</span>
+                        <span id="total-institutions">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Total Programs:</span>
+                        <span id="total-programs">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Visible:</span>
+                        <span id="visible-count">-</span>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <span>Total Programs:</span>
-                    <span id="total-programs">-</span>
-                </div>
-                <div class="stat-item">
-                    <span>Visible:</span>
-                    <span id="visible-count">-</span>
-                </div>
-            </div>
 
-            <div class="legend">
-                <h4><i class="fas fa-info-circle"></i> Program Types</h4>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #599af4;"></div>
-                    <span>Professional</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #fb9090;"></div>
-                    <span>Research</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #92df92;"></div>
-                    <span>Mixed</span>
+                <div class="legend">
+                    <h4><i class="fas fa-info-circle"></i> Program Types</h4>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #599af4;"></div>
+                        <span>Professional</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #fb9090;"></div>
+                        <span>Research</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #92df92;"></div>
+                        <span>Mixed</span>
+                    </div>
                 </div>
             </div>
 
@@ -224,6 +226,25 @@
             markers.forEach(marker => map.removeLayer(marker));
             markers = [];
 
+            // 根据屏幕大小动态调整标记大小
+            const isMobile = window.innerWidth <= 768;
+            const isSmallMobile = window.innerWidth <= 480;
+            
+            let markerSize, borderWidth, shadowSize;
+            if (isSmallMobile) {
+                markerSize = 12;
+                borderWidth = 1;
+                shadowSize = '0 1px 2px rgba(0,0,0,0.3)';
+            } else if (isMobile) {
+                markerSize = 15;
+                borderWidth = 1;
+                shadowSize = '0 1px 3px rgba(0,0,0,0.3)';
+            } else {
+                markerSize = 20;
+                borderWidth = 2;
+                shadowSize = '0 2px 5px rgba(0,0,0,0.3)';
+            }
+
             institutionData.forEach((data, institution) => {
                 // Determine primary program type for marker color
                 const programTypes = data.programs.map(p => p.type).filter(t => t);
@@ -236,13 +257,13 @@
                     ? Object.keys(typeCounts).reduce((a, b) => typeCounts[a] > typeCounts[b] ? a : b)
                     : 'default';
 
-                // Create custom icon
+                // Create custom icon with responsive size
                 const iconColor = colorMap[primaryType] || colorMap.default;
                 const customIcon = L.divIcon({
                     className: 'custom-marker',
-                    html: `<div style="background-color: ${iconColor}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"></div>`,
-                    iconSize: [20, 20],
-                    iconAnchor: [10, 10]
+                    html: `<div style="background-color: ${iconColor}; width: ${markerSize}px; height: ${markerSize}px; border-radius: 50%; border: ${borderWidth}px solid white; box-shadow: ${shadowSize};"></div>`,
+                    iconSize: [markerSize, markerSize],
+                    iconAnchor: [markerSize/2, markerSize/2]
                 });
 
                 // Create popup content
