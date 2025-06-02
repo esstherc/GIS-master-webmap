@@ -296,6 +296,28 @@ body {
         margin-bottom: 0;
     }
     
+    /* 过滤器网格布局 - 2行2列 */
+    .filters-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+    
+    .filters-grid .filter-group {
+        margin-bottom: 0;
+    }
+    
+    .filters-grid .filter-group label {
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+    
+    .filters-grid .filter-group select {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+    
     .header h1 {
         font-size: 1.8em;
     }
@@ -352,6 +374,22 @@ body {
     .legend-item {
         margin-bottom: 4px;
         font-size: 13px;
+    }
+    
+    /* 更小屏幕的过滤器网格 */
+    .filters-grid {
+        gap: 6px;
+        margin-bottom: 12px;
+    }
+    
+    .filters-grid .filter-group label {
+        font-size: 11px;
+        margin-bottom: 3px;
+    }
+    
+    .filters-grid .filter-group select {
+        padding: 5px 6px;
+        font-size: 11px;
     }
     
     .filter-group select, 

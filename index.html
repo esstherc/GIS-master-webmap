@@ -60,30 +60,32 @@
             <div class="filter-section">
                 <h3><i class="fas fa-filter"></i> Filters</h3>
                 
-                <div class="filter-group">
-                    <label for="state-filter">State:</label>
-                    <select id="state-filter">
-                        <option value="">All States</option>
-                    </select>
-                </div>
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="state-filter">State:</label>
+                        <select id="state-filter">
+                            <option value="">All States</option>
+                        </select>
+                    </div>
 
-                <div class="filter-group">
-                    <label for="type-filter">Program Type:</label>
-                    <select id="type-filter">
-                        <option value="">All Types</option>
-                    </select>
-                </div>
+                    <div class="filter-group">
+                        <label for="type-filter">Program Type:</label>
+                        <select id="type-filter">
+                            <option value="">All Types</option>
+                        </select>
+                    </div>
 
-                <div class="filter-group">
-                    <label for="location-filter">Format:</label>
-                    <select id="location-filter">
-                        <option value="">All Formats</option>
-                    </select>
-                </div>
+                    <div class="filter-group">
+                        <label for="location-filter">Format:</label>
+                        <select id="location-filter">
+                            <option value="">All Formats</option>
+                        </select>
+                    </div>
 
-                <div class="filter-group">
-                    <label for="search-filter">Search Institution:</label>
-                    <input type="text" id="search-filter" placeholder="Type to search...">
+                    <div class="filter-group">
+                        <label for="search-filter">Search:</label>
+                        <input type="text" id="search-filter" placeholder="Type to search...">
+                    </div>
                 </div>
 
                 <button class="btn btn-primary" onclick="applyFilters()">
