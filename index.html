@@ -18,6 +18,7 @@
 <body>
     <div class="header">
         <h1><i class="fas fa-map-marked-alt"></i> GIS Master's Programs in the US</h1>
+        <p>Yanbing Chen, 2025</p>
     </div>
 
     <div class="container">
@@ -41,15 +42,15 @@
             <div class="legend">
                 <h4><i class="fas fa-info-circle"></i> Program Types</h4>
                 <div class="legend-item">
-                    <div class="legend-color" style="background-color: #3388ff;"></div>
+                    <div class="legend-color" style="background-color: #599af4;"></div>
                     <span>Professional</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background-color: #ff3333;"></div>
+                    <div class="legend-color" style="background-color: #fb9090;"></div>
                     <span>Research</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background-color: #33ff33;"></div>
+                    <div class="legend-color" style="background-color: #92df92;"></div>
                     <span>Mixed</span>
                 </div>
             </div>
@@ -113,15 +114,15 @@
 
         // Color scheme for program types
         const colorMap = {
-            'professional': '#3388ff',
-            'research': '#ff3333',
-            'mixed': '#33ff33',
+            'professional': '#599af4',
+            'research': '#fb9090',
+            'mixed': '#92df92',
             'default': '#ffaa00'
         };
 
         // Initialize map
         function initMap() {
-            map = L.map('map').setView([39.8283, -98.5795], 4);
+            map = L.map('map').setView([39.8283, -98.5795], 5);
             
             // Add Stadia Stamen Toner Lite basemap
             L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.{ext}?api_key=a83e3eb2-e11a-4f18-8f4c-430515354603', {
@@ -239,7 +240,7 @@
                 const iconColor = colorMap[primaryType] || colorMap.default;
                 const customIcon = L.divIcon({
                     className: 'custom-marker',
-                    html: `<div style="background-color: ${iconColor}; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"></div>`,
+                    html: `<div style="background-color: ${iconColor}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"></div>`,
                     iconSize: [20, 20],
                     iconAnchor: [10, 10]
                 });
