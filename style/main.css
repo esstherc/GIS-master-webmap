@@ -7,19 +7,41 @@
 body {
     font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
 }
 
 .header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #34495e;
     color: white;
     padding: 20px;
     text-align: center;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: relative;
+    width: calc(100% - 300px);
+    margin-left: 300px;
+    box-sizing: border-box;
 }
 
 .header h1 {
     font-size: 2.5em;
     margin-bottom: 10px;
+}
+
+.header h2 {
+    font-size: 1.4em;
+    margin-bottom: 15px;
+    opacity: 0.95;
+    font-weight: 400;
+}
+
+.header .author-info {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    font-size: 0.9em;
+    opacity: 0.8;
+    margin: 0;
 }
 
 .header p {
@@ -30,6 +52,8 @@ body {
 .container {
     display: flex;
     height: calc(100vh - 120px);
+    width: calc(100% - 300px);
+    margin-left: 300px;
 }
 
 .sidebar {
@@ -38,6 +62,11 @@ body {
     padding: 20px;
     box-shadow: 2px 0 10px rgba(0,0,0,0.1);
     overflow-y: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1000;
 }
 
 .map-container {
@@ -58,7 +87,7 @@ body {
     color: #333;
     margin-bottom: 15px;
     font-size: 1.1em;
-    border-bottom: 2px solid #667eea;
+    border-bottom: 2px solid #34495e;
     padding-bottom: 5px;
 }
 
@@ -99,13 +128,14 @@ body {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #34495e;
     color: white;
 }
 
 .btn-primary:hover {
+    background: #2c3e50;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 5px 15px rgba(52, 73, 94, 0.4);
 }
 
 .btn-secondary {
@@ -152,14 +182,15 @@ body {
 .legend-item {
     display: flex;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+    font-size: 14px;image.png
 }
 
 .legend-color {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    margin-right: 10px;
+    margin-right: 8px;
 }
 
 .popup-content {
@@ -296,27 +327,27 @@ body {
         margin-bottom: 0;
     }
     
-    /* 过滤器网格布局 - 2行2列 */
+    /* 过滤器网格布局 - 2列布局 */
     .filters-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 6px;
+        gap: 10px;
         margin-bottom: 15px;
     }
-    
+
     .filters-grid .filter-group {
         margin-bottom: 0;
     }
-    
+
     .filters-grid .filter-group label {
-        font-size: 11px;
+        font-size: 12px;
         margin-bottom: 3px;
     }
-    
+
     .filters-grid .filter-group select,
     .filters-grid .filter-group input {
-        padding: 5px 6px;
-        font-size: 11px;
+        padding: 6px 8px;
+        font-size: 12px;
     }
     
     /* 按钮并列显示 */
@@ -495,4 +526,44 @@ select, input, button {
 .filters input,
 .filters button {
     font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Custom tooltip styles */
+.custom-tooltip {
+    background: rgba(0, 0, 0, 0.8) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 10px 20px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+    white-space: nowrap !important;
+    min-width: 300px !important;
+    max-width: 450px !important;
+    text-align: center !important;
+}
+
+.custom-tooltip::before {
+    border-top-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* 响应式tooltip */
+@media (max-width: 768px) {
+    .custom-tooltip {
+        font-size: 12px !important;
+        padding: 8px 16px !important;
+        min-width: 250px !important;
+        max-width: 350px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .custom-tooltip {
+        font-size: 11px !important;
+        padding: 6px 12px !important;
+        min-width: 200px !important;
+        max-width: 280px !important;
+    }
 }

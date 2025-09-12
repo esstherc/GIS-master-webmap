@@ -17,8 +17,9 @@
 
 <body>
     <div class="header">
-        <h1><i class="fas fa-map-marked-alt"></i> GIS Master's Programs in the US</h1>
-        <p>Yanbing Chen, 2025</p>
+        <h1>GIS Master's Programs in the US</h1>
+        <h2>Explore 172 GIS master's programs across 140 institutions in the U.S.</h2>
+        <p class="author-info">Yanbing Chen, 2025</p>
     </div>
 
     <div class="container">
@@ -35,7 +36,7 @@
                         <span id="total-programs">-</span>
                     </div>
                     <div class="stat-item">
-                        <span>Visible:</span>
+                        <span><strong># of Matching Institutions:</strong></span>
                         <span id="visible-count">-</span>
                     </div>
                 </div>
@@ -74,7 +75,9 @@
                             <option value="">All Types</option>
                         </select>
                     </div>
+                </div>
 
+                <div class="filters-grid">
                     <div class="filter-group">
                         <label for="location-filter">Format:</label>
                         <select id="location-filter">
@@ -128,11 +131,13 @@
 
         // Initialize map
         function initMap() {
-            map = L.map('map').setView([39.8283, -98.5795], 5);
+            map = L.map('map', {
+                minZoom: 4
+            }).setView([39.8283, -98.5795], 5);
             
             // Add Stadia Stamen Toner Lite basemap
             L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.{ext}?api_key=a83e3eb2-e11a-4f18-8f4c-430515354603', {
-                minZoom: 0,
+                minZoom: 4,
                 maxZoom: 20,
                 attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
                 ext: 'png'
@@ -230,23 +235,41 @@
             markers.forEach(marker => map.removeLayer(marker));
             markers = [];
 
-            // 根据屏幕大小动态调整标记大小
+            // 根据屏幕大小和缩放级别动态调整标记大小
             const isMobile = window.innerWidth <= 768;
             const isSmallMobile = window.innerWidth <= 480;
+            const currentZoom = map.getZoom();
             
-            let markerSize, borderWidth, shadowSize;
+            // 基础大小
+            let baseSize, borderWidth, shadowSize;
             if (isSmallMobile) {
-                markerSize = 12;
+                baseSize = 8;
                 borderWidth = 1;
                 shadowSize = '0 1px 2px rgba(0,0,0,0.3)';
             } else if (isMobile) {
-                markerSize = 15;
+                baseSize = 10;
                 borderWidth = 1;
                 shadowSize = '0 1px 3px rgba(0,0,0,0.3)';
             } else {
-                markerSize = 20;
+                baseSize = 12;
                 borderWidth = 2;
                 shadowSize = '0 2px 5px rgba(0,0,0,0.3)';
+            }
+            
+            // 根据缩放级别调整大小
+            let markerSize;
+            if (currentZoom < 5) {
+                markerSize = baseSize * 1.1; // 最小缩放时很小
+            } else if (currentZoom == 5) {
+                markerSize = baseSize * 1.5; // 小缩放时较小
+            } else if (currentZoom <= 6) {
+                markerSize = baseSize * 1.7; // 小缩放时较小
+            } else if (currentZoom <= 7) {
+                markerSize = baseSize *2; // 中等缩放时正常大小
+            } else if (currentZoom <= 10) {
+                markerSize = baseSize * 2; // 大缩放时较大
+            } else {
+                markerSize = baseSize * 3; // 最大缩放时最大
             }
 
             institutionData.forEach((data, institution) => {
@@ -275,6 +298,12 @@
 
                 // Create marker
                 const marker = L.marker([data.latitude, data.longitude], { icon: customIcon })
+                    .bindTooltip(data.institution, {
+                        permanent: false,
+                        direction: 'top',
+                        offset: [0, -10],
+                        className: 'custom-tooltip'
+                    })
                     .bindPopup(popupContent, { maxWidth: 450 })
                     .addTo(map);
 
@@ -412,10 +441,18 @@
             document.getElementById('visible-count').textContent = markers.length;
         }
 
+        // 添加缩放事件监听器，当缩放级别改变时重新创建标记
+        function addZoomListener() {
+            map.on('zoomend', function() {
+                createMarkers();
+            });
+        }
+
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
             initMap();
             loadData();
+            addZoomListener(); // 添加缩放监听器
 
             // Add real-time search
             document.getElementById('search-filter').addEventListener('input', applyFilters);

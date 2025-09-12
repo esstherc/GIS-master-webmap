@@ -1,12 +1,12 @@
 University,Latitude,Longitude,Address,State,City,Confidence
 University of Southern California,34.0218689,-118.2858579,"University of Southern California, West 34th Street, Los Angeles, CA 90089, United States of America",CA,Los Angeles,9
-Pennsylvania State University-World Campus,40.696298,-77.995133,"Pennsylvania Furnace Rd, Pennsylvania Furnace, PA, United States of America",PA,Pennsylvania Furnace,4
+Pennsylvania State University-World Campus,40.79326319296742, -77.86690759282376,"Pennsylvania Furnace Rd, Pennsylvania Furnace, PA, United States of America",PA,State College,4
 University of Illinois Urbana-Champaign,40.0761545,-88.2233134,"University of Illinois Urbana-Champaign, Hessel Boulevard, Champaign, IL 61820, United States of America",IL,Champaign,7
 University of Maryland-College Park,38.9904124,-76.9438586,"University of Maryland, College Park, Huron Street, College Park, MD 20742, United States of America",MD,College Park,7
 University of Redlands,34.0635903,-117.1638519,"University of Redlands, East Brockton Avenue, Redlands, CA 92374, United States of America",CA,Redlands,9
 Calvin University,42.9320314,-85.580364,"Calvin University, 3201 Burton Street Southeast, Grand Rapids, MI 49546, United States of America",MI,Grand Rapids,8
 Temple University,39.981188,-75.1562828,"Temple University, 1801 North Broad Street, Philadelphia, PA 19122, United States of America",PA,Philadelphia,9
-University of Wisconsin-Madison,43.0802745,-89.4309587,"University of Wisconsin-Madison, University Avenue, Shorewood Hills, Dane County, WI 53705, United States of America",WI,Shorewood Hills,7
+University of Wisconsin-Madison,43.0802745,-89.4309587,"University of Wisconsin-Madison, University Avenue, Shorewood Hills, Dane County, WI 53705, United States of America",WI,Madison,7
 Georgia Institute of Technology-Main Campus,34.449771,-86.93258,"Georgia St NE, Hartselle, AL, United States of America",AL,Hartselle,3
 George Mason University,38.8313333,-77.3079884,"George Mason University, 4400 University Drive, George Mason, Fairfax County, VA 22030, United States of America",VA,George Mason,7
 University at Buffalo,43.0007502,-78.7887138,"University at Buffalo, 12, Amherst, NY 14260, United States of America",NY,Town of Amherst,9
@@ -63,7 +63,7 @@ University of Denver,39.6766157,-104.9623745,"University of Denver, 2199 South U
 Elmhurst University,41.8971173,-87.9469201,"Elmhurst University, 190 Walnut Street, Elmhurst, IL 60126, United States of America",IL,Elmhurst,9
 Western Illinois University,40.4771468,-90.6862024,"Western Illinois University, 1 University Circle, Macomb, IL 61455, United States of America",IL,Macomb,7
 Binghamton University,42.0877998,-75.9706607,"State University of New York at Binghamton, 4400 Vestal Parkway East, City of Binghamton, NY 13902, United States of America",NY,City of Binghamton,7
-Pennsylvania State University-Main Campus,40.696298,-77.995133,"Pennsylvania Furnace Rd, Pennsylvania Furnace, PA, United States of America",PA,Pennsylvania Furnace,3
+Pennsylvania State University-Main Campus,40.79326319296742, -77.86690759282376,"Pennsylvania Furnace Rd, Pennsylvania Furnace, PA, United States of America",PA,State College,3
 Appalachian State University,36.2113524,-81.6860913,"Appalachian State University, 287 Rivers Street, Boone, NC 28608, United States of America",NC,Boone,7
 Auburn University,32.5919528,-85.4959775,"Auburn University, Auburn, AL 36849, United States of America",AL,Auburn,6
 California State University-Fullerton,33.8830939,-117.8852152,"California State University Fullerton, 800 North State College Boulevard, Fullerton, CA 92831, United States of America",CA,Fullerton,8
