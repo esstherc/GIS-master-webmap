@@ -567,3 +567,117 @@ select, input, button {
         max-width: 280px !important;
     }
 }
+
+/* User Notes Styles */
+.user-notes {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.note-buttons {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.note-btn {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.note-btn:hover {
+    background: #e9ecef;
+}
+
+.wishlist-btn.active {
+    background: #fff3cd;
+    border-color: #ffeaa7;
+}
+
+.note-btn.active {
+    background: #d1ecf1;
+    border-color: #bee5eb;
+}
+
+.note-input {
+    margin-top: 8px;
+}
+
+.note-input textarea {
+    width: 100%;
+    min-height: 60px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 12px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.note-input button {
+    background: #34495e;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-top: 4px;
+}
+
+.note-input button:hover {
+    background: #2c3e50;
+}
+
+.saved-notes {
+    margin-top: 8px;
+}
+
+.wishlist-display, .note-display {
+    background: #f8f9fa;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-bottom: 4px;
+    border-left: 3px solid #34495e;
+}
+
+.wishlist-display {
+    background: #fff3cd;
+    border-left-color: #ffc107;
+}
+
+.note-display {
+    background: #d1ecf1;
+    border-left-color: #17a2b8;
+}
+
+/* Export button */
+.export-section {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.export-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.export-btn:hover {
+    background: #218838;
+}

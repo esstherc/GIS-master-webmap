@@ -101,6 +101,12 @@
                     </button>
                 </div>
             </div>
+
+            <div class="export-section">
+                <button class="export-btn" onclick="exportToCSV()">
+                    <i class="fas fa-download"></i> Download Saved Programs
+                </button>
+            </div>
         </div>
 
         <div class="map-container">
@@ -147,26 +153,50 @@
         // Load and process data
         async function loadData() {
             try {
-                // Load program data - 调整路径
+                console.log('Starting to load data...');
+                
+                // Load program data
+                console.log('Loading program data...');
                 const programResponse = await fetch('data/all_msgis_institutions.csv');
+                
+                if (!programResponse.ok) {
+                    throw new Error(`Failed to load program data: ${programResponse.status} ${programResponse.statusText}`);
+                }
+                
                 const programText = await programResponse.text();
+                console.log('Program data loaded, parsing...');
                 const programData = Papa.parse(programText, { header: true }).data;
+                console.log('Program data parsed:', programData.length, 'records');
 
                 // Load coordinates data 
+                console.log('Loading coordinates data...');
                 const coordResponse = await fetch('data/universities_coordinates_all.csv');
+                
+                if (!coordResponse.ok) {
+                    throw new Error(`Failed to load coordinates data: ${coordResponse.status} ${coordResponse.statusText}`);
+                }
+                
                 const coordText = await coordResponse.text();
+                console.log('Coordinates data loaded, parsing...');
                 const coordData = Papa.parse(coordText, { header: true }).data;
+                console.log('Coordinates data parsed:', coordData.length, 'records');
 
                 // Merge data
+                console.log('Merging data...');
                 allData = mergeData(programData, coordData);
+                console.log('Data merged:', allData.length, 'records');
+                
                 processData();
                 createMarkers();
                 populateFilters();
                 updateStats();
+                updateAllNoteDisplays();
+
+                console.log('Data loading completed successfully');
 
             } catch (error) {
                 console.error('Error loading data:', error);
-                alert('Error loading data. Please make sure the CSV files are available.');
+                alert(`Error loading data: ${error.message}\n\nPlease make sure:\n1. You are running this from a web server (not file://)\n2. The CSV files exist in the data/ directory\n3. The server allows CORS requests`);
             }
         }
 
@@ -324,9 +354,10 @@
                     <hr style="margin: 10px 0;">
             `;
 
-            data.programs.forEach(program => {
+            data.programs.forEach((program, index) => {
                 const link = program.link && program.link !== 'N/A' ? program.link : '#';
                 const typeColor = colorMap[program.type] || colorMap.default;
+                const programId = `${data.institution}_${index}`;
                 
                 content += `
                     <div class="program-item" style="border-left-color: ${typeColor};">
@@ -340,6 +371,16 @@
                             <span><strong>Duration:</strong> ${program.duration || 'N/A'}</span>
                             <span><strong>Graduation:</strong> ${program.graduation || 'N/A'}</span>
                         </div>
+                        <div class="user-notes" data-program-id="${programId}">
+                            <div class="note-buttons">
+                                <button class="note-btn wishlist-btn" onclick="addToWishlist('${programId}')">
+                                    <span class="wishlist-icon">⭐</span> Add to Wishlist
+                                </button>
+                                <button class="note-btn note-btn" onclick="addNote('${programId}')">
+                                    <span class="note-icon">📝</span> Add Note
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 `;
             });
@@ -348,7 +389,175 @@
             return content;
         }
 
-        // Populate filter dropdowns
+        // Simple CSV export functionality
+        let savedPrograms = JSON.parse(localStorage.getItem('savedPrograms') || '[]');
+
+        function addToWishlist(programId) {
+            // Find the program data
+            const programData = findProgramById(programId);
+            if (programData) {
+                // Check if already exists
+                const exists = savedPrograms.find(p => p.programId === programId);
+                if (!exists) {
+                    savedPrograms.push({
+                        ...programData,
+                        programId: programId,
+                        type: 'Wishlist',
+                        note: '',
+                        dateAdded: new Date().toISOString()
+                    });
+                    localStorage.setItem('savedPrograms', JSON.stringify(savedPrograms));
+                    alert('Added to wishlist!');
+                } else {
+                    alert('Already in wishlist!');
+                }
+            }
+        }
+
+        function addNote(programId) {
+            const note = prompt('Enter your note:');
+            if (note && note.trim()) {
+                // Find the program data
+                const programData = findProgramById(programId);
+                if (programData) {
+                    // Check if already exists
+                    const exists = savedPrograms.find(p => p.programId === programId);
+                    if (exists) {
+                        // Update existing note
+                        exists.note = note.trim();
+                        exists.type = exists.type + ' + Note';
+                    } else {
+                        // Add new entry
+                        savedPrograms.push({
+                            ...programData,
+                            programId: programId,
+                            type: 'Note',
+                            note: note.trim(),
+                            dateAdded: new Date().toISOString()
+                        });
+                    }
+                    localStorage.setItem('savedPrograms', JSON.stringify(savedPrograms));
+                    alert('Note added!');
+                }
+            }
+        }
+
+        function findProgramById(programId) {
+            // Parse programId to find the program
+            const parts = programId.split('_');
+            const institution = parts[0];
+            const programIndex = parseInt(parts[1]);
+            
+            // Find in allData
+            let currentIndex = 0;
+            for (let i = 0; i < allData.length; i++) {
+                if (allData[i].Institution === institution) {
+                    if (currentIndex === programIndex) {
+                        return allData[i];
+                    }
+                    currentIndex++;
+                }
+            }
+            return null;
+        }
+
+        function exportToCSV() {
+            if (savedPrograms.length === 0) {
+                alert('No saved programs found! Please add some programs to wishlist or add notes first.');
+                return;
+            }
+
+            try {
+                // Prepare CSV data
+                const csvData = savedPrograms.map(program => ({
+                    'Institution': program.Institution || 'N/A',
+                    'Program': program.Program || 'N/A',
+                    'State': program.state || 'N/A',
+                    'City': program.city || 'N/A',
+                    'Program Type': program['program type'] || 'N/A',
+                    'Format': program.location || 'N/A',
+                    'Duration': program.duration || 'N/A',
+                    'Graduation Requirement': program['graduation requirement'] || 'N/A',
+                    'Link': program.link || 'N/A',
+                    'Saved Type': program.type || 'N/A',
+                    'Note': program.note || 'N/A',
+                    'Date Added': program.dateAdded || 'N/A'
+                }));
+
+                // Convert to CSV
+                const csvContent = convertToCSV(csvData);
+                downloadCSV(csvContent, 'saved_programs.csv');
+                
+                alert(`Exported ${savedPrograms.length} programs to CSV!`);
+
+            } catch (error) {
+                console.error('Export failed:', error);
+                alert('Export failed: ' + error.message);
+            }
+        }
+
+        function convertToCSV(data) {
+            const headers = Object.keys(data[0]);
+            const csvRows = [];
+            
+            // Add header row
+            csvRows.push(headers.join(','));
+            
+            // Add data rows
+            data.forEach(row => {
+                const values = headers.map(header => {
+                    const value = row[header] || '';
+                    return `"${value.toString().replace(/"/g, '""')}"`;
+                });
+                csvRows.push(values.join(','));
+            });
+            
+            return csvRows.join('\n');
+        }
+
+        function downloadCSV(csvContent, filename) {
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Missing functions for statistics and filters
+        function processData() {
+            institutionData.clear();
+
+            allData.forEach(program => {
+                const key = program.Institution;
+                if (!institutionData.has(key)) {
+                    institutionData.set(key, {
+                        institution: program.Institution,
+                        latitude: program.latitude,
+                        longitude: program.longitude,
+                        state: program.state,
+                        city: program.city,
+                        address: program.address,
+                        programs: []
+                    });
+                }
+
+                institutionData.get(key).programs.push({
+                    name: program.Program,
+                    link: program.link,
+                    type: program['program type'],
+                    graduation: program['graduation requirement'],
+                    duration: program.duration,
+                    location: program.location,
+                    institutionType: program['institution type']
+                });
+            });
+        }
+
         function populateFilters() {
             const states = new Set();
             const types = new Set();
@@ -365,9 +574,13 @@
             populateSelect('location-filter', Array.from(locations).sort());
         }
 
-        // Helper function to populate select elements
         function populateSelect(selectId, options) {
             const select = document.getElementById(selectId);
+            // Clear existing options except the first one
+            while (select.children.length > 1) {
+                select.removeChild(select.lastChild);
+            }
+            
             options.forEach(option => {
                 const optionElement = document.createElement('option');
                 optionElement.value = option;
@@ -376,7 +589,6 @@
             });
         }
 
-        // Apply filters
         function applyFilters() {
             const stateFilter = document.getElementById('state-filter').value;
             const typeFilter = document.getElementById('type-filter').value;
@@ -422,7 +634,6 @@
             document.getElementById('visible-count').textContent = visibleCount;
         }
 
-        // Clear all filters
         function clearFilters() {
             document.getElementById('state-filter').value = '';
             document.getElementById('type-filter').value = '';
@@ -434,25 +645,36 @@
             updateStats();
         }
 
-        // Update statistics
         function updateStats() {
             document.getElementById('total-institutions').textContent = institutionData.size;
             document.getElementById('total-programs').textContent = allData.length;
             document.getElementById('visible-count').textContent = markers.length;
         }
 
-        // 添加缩放事件监听器，当缩放级别改变时重新创建标记
         function addZoomListener() {
             map.on('zoomend', function() {
                 createMarkers();
             });
         }
 
+        // Update all note displays when page loads
+        function updateAllNoteDisplays() {
+            setTimeout(() => {
+                Object.keys(userNotes).forEach(programId => {
+                    const element = document.getElementById(`saved-notes-${programId}`);
+                    if (element) {
+                        updateNoteDisplay(programId);
+                    }
+                });
+            }, 100);
+        }
+
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
             initMap();
             loadData();
-            addZoomListener(); // 添加缩放监听器
+            addZoomListener();
+            updateAllNoteDisplays(); // 添加这行
 
             // Add real-time search
             document.getElementById('search-filter').addEventListener('input', applyFilters);
