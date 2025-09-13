@@ -19,7 +19,44 @@
     <div class="header">
         <h1>GIS Master's Programs in the US</h1>
         <h2>Explore 172 GIS master's programs across 140 institutions in the U.S.</h2>
-        <p class="author-info">Yanbing Chen, 2025</p>
+        <p class="author-info">
+            Yanbing Chen, 2025
+            <i class="fas fa-info-circle info-icon" onclick="showInfoPopup()" onmouseover="showInfoTooltip()" onmouseout="hideInfoTooltip()"></i>
+        </p>
+    </div>
+
+    <!-- Info Popup Modal -->
+    <div id="infoModal" class="info-modal">
+        <div class="info-modal-content">
+            <span class="close" onclick="closeInfoPopup()">&times;</span>
+            <h3>About This Project</h3>
+            <div class="info-text">
+                <p><strong>Project Overview:</strong></p>
+                <p>This interactive map displays GIS Master's programs across the United States, providing comprehensive and up-to-date information (as of September 2025) about <strong>172 programs</strong> at <strong>140 institutions</strong>. Each program is categorized by its primary focus—<span style="color:#3f82ef;">Professional</span>, <span style="color:#f1616d;">Research</span>, or <span style="color:#59c686;">Mixed</span>—to help prospective students, educators, and researchers explore GIS graduate education across the U.S.</p>
+
+                <p>This visualization is one of the map products developed for my M.S. thesis titled <em>“GIScience Education from Faculty Careers to Student Training: A Dual Perspective on Academic and Professional Development.”</em> The project aims to analyze trends in GIS education by synthesizing faculty hiring data, curriculum structures, and program-level characteristics across academic and professional tracks. </p>
+                    
+                <p>The full thesis is available through the University of Wisconsin–Madison’s institutional repository: <a href="https://minds.wisconsin.edu/handle/1793/95176" target="_blank">https://minds.wisconsin.edu/handle/1793/95176</a></p>
+
+                <p><strong>Data Sources:</strong></p>
+                <p>• Program information manually collected from university websites<br>
+                
+                <p><strong>Features:</strong></p>
+                <p>• Interactive filtering by state, program type, and format<br>
+                • Detailed program information in popups<br>
+                • Save programs to wishlist or add notes<br>
+                • Export saved programs to CSV</p>
+
+                <p><strong>Author:</strong></p>
+                <p>Yanbing Chen is a PhD student at University of Wisconsin-Madison, check out her <a href="https://esstherc.github.io/resume" target="_blank">portfolio</a> for more maps!</p>
+            
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Tooltip -->
+    <div id="infoTooltip" class="info-tooltip">
+        Click for more information
     </div>
 
     <div class="container">
@@ -111,6 +148,61 @@
 
         <div class="map-container">
             <div id="map"></div>
+            
+            <!-- Suggest Edit Box -->
+            <div class="suggest-edit-box" onclick="showSuggestEditModal()">
+                <i class="fas fa-edit"></i>
+                <span>Suggest an edit?</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Suggest Edit Modal -->
+    <div id="suggestEditModal" class="suggest-edit-modal">
+        <div class="suggest-edit-modal-content">
+            <span class="close" onclick="closeSuggestEditModal()">&times;</span>
+            <h3>Suggest an Edit</h3>
+            <div class="suggest-edit-text">
+                <p>I want to keep this page as up-to-date as possible. If you find an error (e.g. new program, program listed is no longer active, wrong link etc.) fill the following form and I will review the email then correct.</p>
+            </div>
+            <form id="suggestEditForm" onsubmit="submitSuggestion(event)">
+                <div class="form-group">
+                    <label for="editType">Type of Issue:</label>
+                    <select id="editType" required>
+                        <option value="">Select an option</option>
+                        <option value="new-program">New program to add</option>
+                        <option value="inactive-program">Program no longer active</option>
+                        <option value="wrong-link">Wrong or broken link</option>
+                        <option value="incorrect-info">Incorrect program information</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="institution">Institution Name:</label>
+                    <input type="text" id="institution" placeholder="e.g., University of Wisconsin-Madison">
+                </div>
+                
+                <div class="form-group">
+                    <label for="program">Program Name:</label>
+                    <input type="text" id="program" placeholder="e.g., MS in GIS">
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description of the issue:</label>
+                    <textarea id="description" rows="4" placeholder="Please provide details about the issue or suggestion..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Your Email (optional):</label>
+                    <input type="email" id="email" placeholder="your.email@example.com">
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" onclick="closeSuggestEditModal()">Cancel</button>
+                    <button type="submit">Submit Suggestion</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -657,6 +749,51 @@
             });
         }
 
+        // Info popup functions
+        function showInfoPopup() {
+            document.getElementById('infoModal').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeInfoPopup() {
+            document.getElementById('infoModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        function showInfoTooltip() {
+            const tooltip = document.getElementById('infoTooltip');
+            const icon = document.querySelector('.info-icon');
+            const rect = icon.getBoundingClientRect();
+            
+            // 计算tooltip位置 - 右对齐icon
+            const tooltipWidth = 200; // 估算tooltip宽度
+            const tooltipHeight = 30; // 估算tooltip高度
+            const spacing = 10; // icon和tooltip之间的间距
+            
+            tooltip.style.left = (rect.right - tooltipWidth) + 'px'; // 右对齐
+            tooltip.style.top = (rect.top - tooltipHeight - spacing) + 'px'; // 在icon上方
+            tooltip.classList.add('show');
+        }
+
+        function hideInfoTooltip() {
+            document.getElementById('infoTooltip').classList.remove('show');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('infoModal');
+            if (event.target === modal) {
+                closeInfoPopup();
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeInfoPopup();
+            }
+        });
+
         // Update all note displays when page loads
         function updateAllNoteDisplays() {
             setTimeout(() => {
@@ -669,12 +806,76 @@
             }, 100);
         }
 
+        // Suggest Edit Modal functions
+        function showSuggestEditModal() {
+            document.getElementById('suggestEditModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSuggestEditModal() {
+            document.getElementById('suggestEditModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            // Reset form
+            document.getElementById('suggestEditForm').reset();
+        }
+
+        function submitSuggestion(event) {
+            event.preventDefault();
+            
+            const formData = {
+                editType: document.getElementById('editType').value,
+                institution: document.getElementById('institution').value,
+                program: document.getElementById('program').value,
+                description: document.getElementById('description').value,
+                email: document.getElementById('email').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Create email content
+            const emailSubject = `GIS Programs Map - Suggestion: ${formData.editType}`;
+            const emailBody = `
+Type of Issue: ${formData.editType}
+Institution: ${formData.institution || 'Not specified'}
+Program: ${formData.program || 'Not specified'}
+Description: ${formData.description}
+User Email: ${formData.email || 'Not provided'}
+Timestamp: ${formData.timestamp}
+            `.trim();
+            
+            // Show confirmation dialog
+            const confirmMessage = `Your suggestion has been prepared!\n\nClick OK to open your email client with a pre-filled message to yanbing.chen@wisc.edu.\n\nYou just need to click "Send" in your email client to complete the submission.`;
+            
+            if (confirm(confirmMessage)) {
+                // Create mailto link
+                const mailtoLink = `mailto:yanbing.chen@wisc.edu?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+                
+                // Open email client
+                window.location.href = mailtoLink;
+                
+                // Show success message
+                setTimeout(() => {
+                    alert('Email client opened! Please click "Send" to complete your submission. Thank you for your feedback!');
+                }, 1000);
+                
+                // Close modal
+                closeSuggestEditModal();
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('suggestEditModal');
+            if (event.target === modal) {
+                closeSuggestEditModal();
+            }
+        }
+
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
             initMap();
             loadData();
             addZoomListener();
-            updateAllNoteDisplays(); // 添加这行
+            updateAllNoteDisplays(); 
 
             // Add real-time search
             document.getElementById('search-filter').addEventListener('input', applyFilters);
