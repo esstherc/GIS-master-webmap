@@ -72,11 +72,14 @@ body {
 .map-container {
     flex: 1;
     position: relative;
+    height: 100%;
+    min-height: 500px; /* 确保有最小高度 */
 }
 
 #map {
     width: 100%;
     height: 100%;
+    min-height: 500px; /* 确保地图有最小高度 */
 }
 
 .filter-section {
@@ -195,6 +198,9 @@ body {
 
 .popup-content {
     max-width: 400px;
+    max-height: 60vh; /* 限制最大高度 */
+    overflow-y: auto; /* 允许垂直滚动 */
+    padding-right: 10px; /* 为滚动条留出空间 */
 }
 
 .popup-header {
@@ -204,6 +210,10 @@ body {
     margin-bottom: 10px;
     border-bottom: 2px solid #667eea;
     padding-bottom: 5px;
+    position: sticky; /* 标题固定 */
+    top: 0;
+    background: white;
+    z-index: 10;
 }
 
 .program-item {
@@ -305,17 +315,46 @@ body {
 
 /* Responsive design */
 @media (max-width: 768px) {
+    .header {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .header h2 {
+        display: none; /* 移动端隐藏副标题 */
+    }
+    
     .container {
         flex-direction: column;
+        height: auto;
+        margin-left: 0;
+        width: 100%;
     }
     
     .sidebar {
         width: 100%;
         height: auto;
-        max-height: 300px;
+        max-height: none;
+        position: static;
+        box-shadow: none;
+        border-bottom: 1px solid #ddd;
     }
     
-    /* 让stats和legend并列显示 */
+    .map-container {
+        flex: 1;
+        position: relative;
+        margin-left: 0;
+        height: 60vh; /* 给地图一个固定高度 */
+        min-height: 400px;
+    }
+    
+    #map {
+        width: 100%;
+        height: 100%;
+        min-height: 400px; /* 移动端最小高度 */
+    }
+    
+    /* 其他移动端样式保持不变 */
     .stats-legend-container {
         display: flex;
         gap: 10px;
@@ -327,30 +366,28 @@ body {
         margin-bottom: 0;
     }
     
-    /* 过滤器网格布局 - 2列布局 */
     .filters-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 10px;
+        gap: 6px;
         margin-bottom: 15px;
     }
-
+    
     .filters-grid .filter-group {
         margin-bottom: 0;
     }
-
+    
     .filters-grid .filter-group label {
-        font-size: 12px;
+        font-size: 11px;
         margin-bottom: 3px;
     }
-
+    
     .filters-grid .filter-group select,
     .filters-grid .filter-group input {
-        padding: 6px 8px;
-        font-size: 12px;
+        padding: 5px 6px;
+        font-size: 11px;
     }
     
-    /* 按钮并列显示 */
     .button-row {
         display: flex;
         gap: 8px;
@@ -362,14 +399,9 @@ body {
     }
     
     .header h1 {
-        font-size: 0.9em;
+        font-size: 1.5em;
     }
     
-    .header p {
-        font-size: 0.7em;
-    }
-    
-    /* 隐藏手机端的Filters标题 */
     .filter-section h3 {
         display: none;
     }
@@ -378,11 +410,17 @@ body {
         max-width: 280px;
     }
     
-    /* 调整legend中点的大小 */
     .legend-color {
         width: 10px;
         height: 10px;
         margin-right: 6px;
+    }
+    
+    .suggest-edit-box {
+        bottom: 20px;
+        right: 10px;
+        padding: 10px 12px;
+        font-size: 13px;
     }
 }
 
@@ -392,12 +430,15 @@ body {
     }
     
     .header h1 {
-        font-size: 0.9em;
+        font-size: 1.3em;
+    }
+    
+    .header h2 {
+        font-size: 1em;
     }
     
     .sidebar {
         padding: 15px;
-        max-height: 250px;
     }
     
     /* 在很小的屏幕上保持并列 */
@@ -437,12 +478,6 @@ body {
         font-size: 11px;
     }
     
-    .filter-group select, 
-    .filter-group input {
-        padding: 6px 10px;
-        font-size: 11px;
-    }
-    
     /* 小屏幕上按钮行间距调整 */
     .button-row {
         gap: 6px;
@@ -462,6 +497,11 @@ body {
         width: 8px;
         height: 8px;
         margin-right: 5px;
+    }
+    
+    .map-container {
+        height: 50vh;
+        min-height: 300px;
     }
 }
 
@@ -668,7 +708,7 @@ select, input, button {
 }
 
 .export-btn {
-    background: #28a745;
+    background: #2c3e50;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -679,7 +719,7 @@ select, input, button {
 }
 
 .export-btn:hover {
-    background: #218838;
+    background: #2b468c;
 }
 
 /* Info Icon and Modal Styles */
@@ -1037,5 +1077,61 @@ select, input, button {
         right: 10px;
         padding: 10px 12px;
         font-size: 13px;
+    }
+}
+
+/* 移动端popup调整 */
+@media (max-width: 768px) {
+    .popup-content {
+        max-width: 280px;
+        max-height: 70vh; /* 移动端更多空间 */
+    }
+    
+    .popup-header {
+        font-size: 1.1em;
+    }
+    
+    .program-item {
+        padding: 10px;
+        margin: 8px 0;
+    }
+    
+    .program-details {
+        font-size: 0.8em;
+    }
+    
+    .note-btn {
+        font-size: 11px;
+        padding: 3px 6px;
+    }
+    
+    .note-input textarea {
+        min-height: 50px;
+        font-size: 11px;
+    }
+    
+    .note-input button {
+        font-size: 11px;
+        padding: 5px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .popup-content {
+        max-width: 250px;
+        max-height: 75vh;
+    }
+    
+    .popup-header {
+        font-size: 1em;
+    }
+    
+    .program-item {
+        padding: 8px;
+        margin: 6px 0;
+    }
+    
+    .program-details {
+        font-size: 0.75em;
     }
 }
