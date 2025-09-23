@@ -171,3 +171,4 @@ program count,Institution,id,CIP Code,link,coursework,Program,graduation require
 170,University of Washington-Seattle Campus,168,0701 to both to 30&01&02,https://geography.washington.edu/ma-degree-requirements,,MA Geography with GIS Concentration,thesis,/,on-site,/,2 years,research,GIS Concentration
 171,University of Colorado Colorado Springs,,,https://ges.uccs.edu/academics/ma,,MA Applied Geography with GIS focus,thesis,/,hybrid,/,2 years,research,GIS Concentration
 172,Oregon State University,,,https://ceoas.oregonstate.edu/geography-and-geospatial-science-graduate-program,,MS Geography and Geospatial Science,thesis or non-thesis (project),/,hybrid,/,2 years,mixed,GIS Concentration
+173,Florida Atlantic University,, ,https://www.fau.edu/graduate/graduate-programs/ms-geosciences/,,MS Geoscience with GIS Focus,non-thesis (coursework),/,online,/, ,professional,GIS Concentration
