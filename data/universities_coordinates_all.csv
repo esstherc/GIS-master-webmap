@@ -24,15 +24,22 @@ Ohio State University-Main Campus,40.00615468009802, -83.02828386939125,"281 W L
 University of Oklahoma-Norman Campus,35.198943846791494, -97.44499237897212,"",OK,Norman,4
 Arizona State University Campus Immersion,33.45448145014303, -112.070332589444,"411 N Central Ave, Phoenix, AZ 85004, United States of America",AZ,Phoenix,3
 CUNY Lehman College,35.034411,-92.39418,"250 Bedford Park Blvd W, Bronx, NY 10468, United States of America",NY,Bronx,3
+Ohio State University-Main Campus,40.00615468009802, -83.02828386939125,"281 W Lane Ave, Columbus, OH 43210, United States of America",OH,Columbus,4
+University of Oklahoma-Norman Campus,35.198943846791494, -97.44499237897212,"",OK,Norman,4
+Arizona State University Campus Immersion,33.45448145014303, -112.070332589444,"411 N Central Ave, Phoenix, AZ 85004, United States of America",AZ,Phoenix,3
+CUNY Lehman College,35.034411,-92.39418,"250 Bedford Park Blvd W, Bronx, NY 10468, United States of America",NY,Bronx,3
 Delta State University,33.747589,-90.7329004,"Delta State University, Seventh Avenue, Cleveland, MS 38732, United States of America",MS,Cleveland,8
 Eastern Illinois University,39.479694,-88.1754902,"Eastern Illinois University, 600 Lincoln Avenue, Charleston, IL 61920, United States of America",IL,Charleston,9
 Idaho State University,42.862567,-112.4321627,"Idaho State University, 921 South 8th Avenue, Pocatello, ID 83209, United States of America",ID,Pocatello,7
+Indiana University of Pennsylvania-Main Campus,39.722477,-86.156385,"1011 South Drive, Indiana, PA 15705, United States of America",PA,Indiana,3
 Indiana University of Pennsylvania-Main Campus,39.722477,-86.156385,"1011 South Drive, Indiana, PA 15705, United States of America",PA,Indiana,3
 Indiana University-Indianapolis,39.7747586,-86.1769528,"Indiana University Indianapolis, 420 University Boulevard, Indianapolis, IN 46202, United States of America",IN,Indianapolis,8
 Jacksonville State University,33.8249359,-85.7641095,"Jacksonville State University, 700 Pelham Road North, Jacksonville, AL 36265, United States of America",AL,Jacksonville,8
 Johns Hopkins University,39.3302022,-76.6218536,"Johns Hopkins University - Homewood Campus, 3400 North Charles Street, Baltimore, MD 21218, United States of America",MD,Baltimore,8
 Michigan Technological University,47.1099114,-88.5511513,"Michigan Technological University, 1400 Townsend Drive, Houghton, MI 49931, United States of America",MI,Houghton,7
 Northeastern State University,35.9239099,-94.9681979,"Northeastern State University, North Muskogee Avenue, Tahlequah, OK 74464, United States of America",OK,Tahlequah,8
+Northwest Missouri State University,40.3963382,-94.884145,"Northwest Missouri State University, 800 University Dr, Maryville, MO 64468, United States of America",MO,Maryville,7
+Purdue University-Main Campus,40.42367265914638, -86.92120425144975,"610 Purdue Mall, West Lafayette, IN 47907, United States of America",IN,West Lafayette,4
 Northwest Missouri State University,40.3963382,-94.884145,"Northwest Missouri State University, 800 University Dr, Maryville, MO 64468, United States of America",MO,Maryville,7
 Purdue University-Main Campus,40.42367265914638, -86.92120425144975,"610 Purdue Mall, West Lafayette, IN 47907, United States of America",IN,West Lafayette,4
 Saint Louis University,38.635359,-90.2318433,"Saint Louis University, 1 North Grand Boulevard, St. Louis, MO 63103, United States of America",MO,St. Louis,8
@@ -44,6 +51,7 @@ University of Colorado Denver/Anschutz Medical Campus,37.570304,-77.537784,"Univ
 University of Iowa,41.6311024,-91.540752,"University of Iowa, McCollister Boulevard, Iowa City, IA 52246, United States of America",IA,Iowa City,9
 University of Pennsylvania,39.9503945,-75.1946713,"University of Pennsylvania, Schuylkill River Trail – Christian to Crescent, University City, Philadelphia, PA 19104, United States of America",PA,Philadelphia,8
 University of Pittsburgh-Pittsburgh Campus,41.9447555,-78.6727152,"4200 Fifth Ave, Pittsburgh, PA 15260, United States of America",PA,Pittsburgh,9
+University of Pittsburgh-Pittsburgh Campus,41.9447555,-78.6727152,"4200 Fifth Ave, Pittsburgh, PA 15260, United States of America",PA,Pittsburgh,9
 University of Utah,40.7628137,-111.8368719,"University of Utah, 201 Presidents Circle, Salt Lake City, UT 84112, United States of America",UT,Salt Lake City,7
 University of West Florida,30.5479646,-87.2162015,"University of West Florida, 11000 University Parkway, Pensacola, FL 32514, United States of America",FL,Pensacola,7
 Boston University,42.3504215,-71.1032247,"Boston University, Park Drive, Boston, MA 02215, United States of America",MA,Boston,7
@@ -52,21 +60,31 @@ San Jose State University,37.3351902,-121.8812255,"San José State University Ma
 CUNY Hunter College,42.387334,-124.417885,"Gold Beach, Oregon, United States of America",OR,Gold Beach,6
 California State University-Long Beach,33.78382344648627, -118.11408882514581,"1250 Bellflower Blvd, Long Beach, CA 90840, United States of America",CA,Long Beach,8
 California State University-Northridge,34.24071106744135, -118.52995185207584,"California State University, Northridge, 18111 Nordhoff St, Northridge, CA 91330, United States of America",CA,Northridge,8
+California State University-Long Beach,33.78382344648627, -118.11408882514581,"1250 Bellflower Blvd, Long Beach, CA 90840, United States of America",CA,Long Beach,8
+California State University-Northridge,34.24071106744135, -118.52995185207584,"California State University, Northridge, 18111 Nordhoff St, Northridge, CA 91330, United States of America",CA,Northridge,8
 Clark University,42.2514681,-71.8229509,"Clark University, Delawanda Drive, Worcester, MA 01603, United States of America",MA,Worcester,7
+Eastern Michigan University,42.25075963491797, -83.6241434254101,"900 Oakwood St, Ypsilanti, MI 48197, United States of America",MI,Ypsilanti,7
 Eastern Michigan University,42.25075963491797, -83.6241434254101,"900 Oakwood St, Ypsilanti, MI 48197, United States of America",MI,Ypsilanti,7
 Minnesota State University-Mankato,44.1453537,-93.9977525,"Minnesota State University, Mankato, Joseph Path, University Park, Mankato, MN 56001, United States of America",MN,Mankato,8
 Salem State University,36.0895154,-80.2239737,"352 Lafayette St, Salem, MA 01970, United States of America",MA,Salem,9
+Salem State University,36.0895154,-80.2239737,"352 Lafayette St, Salem, MA 01970, United States of America",MA,Salem,9
 San Francisco State University,37.7245167,-122.4799957,"San Francisco State University, 1600 Holloway Avenue, San Francisco, CA 94132, United States of America",CA,San Francisco,9
+University at Albany,42.6840271,-73.8258773,"University at Albany, The State University of New York, City of Albany, NY 12203, United States of America",NY,Albany,7
+University of California-Los Angeles,34.0708777,-118.4468503,"University of California, Los Angeles, Westwood Boulevard, Westwood, CA 90024, United States of America",CA,Los Angeles,8
 University at Albany,42.6840271,-73.8258773,"University at Albany, The State University of New York, City of Albany, NY 12203, United States of America",NY,Albany,7
 University of California-Los Angeles,34.0708777,-118.4468503,"University of California, Los Angeles, Westwood Boulevard, Westwood, CA 90024, United States of America",CA,Los Angeles,8
 University of Denver,39.6766157,-104.9623745,"University of Denver, 2199 South University Boulevard, Denver, CO 80208, United States of America",CO,Denver,8
 Elmhurst University,41.8971173,-87.9469201,"Elmhurst University, 190 Walnut Street, Elmhurst, IL 60126, United States of America",IL,Elmhurst,9
 Western Illinois University,40.47059802858473, -90.68592432365072,"1 University Cir, Macomb, IL 61455, United States of America",IL,Macomb,7
 Binghamton University,42.0894684233667, -75.96950752707156,"4400 Vestal Pkwy E, Binghamton, NY 13902, United States of America",NY,Binghamton,7
+Western Illinois University,40.47059802858473, -90.68592432365072,"1 University Cir, Macomb, IL 61455, United States of America",IL,Macomb,7
+Binghamton University,42.0894684233667, -75.96950752707156,"4400 Vestal Pkwy E, Binghamton, NY 13902, United States of America",NY,Binghamton,7
 Pennsylvania State University-Main Campus,40.79326319296742, -77.86690759282376,"Pennsylvania Furnace Rd, Pennsylvania Furnace, PA, United States of America",PA,State College,3
+Appalachian State University,36.21365921840535, -81.68427696852815,"John E. Thomas Hall, 287 Rivers St, Boone, NC 28608, United States of America",NC,Boone,7
 Appalachian State University,36.21365921840535, -81.68427696852815,"John E. Thomas Hall, 287 Rivers St, Boone, NC 28608, United States of America",NC,Boone,7
 Auburn University,32.5919528,-85.4959775,"Auburn University, Auburn, AL 36849, United States of America",AL,Auburn,6
 California State University-Fullerton,33.8830939,-117.8852152,"California State University Fullerton, 800 North State College Boulevard, Fullerton, CA 92831, United States of America",CA,Fullerton,8
+California State University-Los Angeles,34.0664949,-118.1671415,"California State University Los Angeles, 5151 State University Drive, East Los Angeles, CA 90032, United States of America",CA,Los Angeles,8
 California State University-Los Angeles,34.0664949,-118.1671415,"California State University Los Angeles, 5151 State University Drive, East Los Angeles, CA 90032, United States of America",CA,Los Angeles,8
 Central Connecticut State University,41.6929277,-72.765429,"Central Connecticut State University, 1615 Stanley Street, New Britain, CT 06050, United States of America",CT,New Britain,8
 Chicago State University,41.7170046,-87.6095326,"Chicago State University, 9501 South Doctor Martin Luther King Junior Drive, Chicago, IL 60628, United States of America",IL,Chicago,9
@@ -81,12 +99,15 @@ Marshall University,38.4236257,-82.4274024,"Marshall University, 1 John Marshall
 Miami University-Oxford,39.5094198,-84.7311546,"Miami University, South Patterson Avenue, Oxford, OH 45056, United States of America",OH,Oxford,7
 Michigan State University,42.7023794,-84.4803869,"Michigan State University, 426 Auditorium Road, East Lansing, MI 48824, United States of America",MI,East Lansing,7
 New Mexico State University-Main Campus,32.2793067375002, -106.74913573911452,"1780 E University Ave, Las Cruces, NM 88003, United States of America",NM,Las Cruces,3
+New Mexico State University-Main Campus,32.2793067375002, -106.74913573911452,"1780 E University Ave, Las Cruces, NM 88003, United States of America",NM,Las Cruces,3
 Northern Illinois University,41.9370934,-88.7826784,"Northern Illinois University, 1425 West Lincoln Highway, DeKalb, IL 60115, United States of America",IL,DeKalb,7
+Oklahoma State University-Main Campus,36.120167151856904, -97.07213846786001,"1010 E 6th Ave, Stillwater, OK 74074, United States of America",OK,Stillwater,3
 Oklahoma State University-Main Campus,36.120167151856904, -97.07213846786001,"1010 E 6th Ave, Stillwater, OK 74074, United States of America",OK,Stillwater,3
 Rutgers University-New Brunswick,40.4976786,-74.4460046,"Catholic Center at Rutgers University, 84 Somerset Street, New Brunswick, NJ 08901, United States of America",NJ,New Brunswick,10
 San Diego State University,32.7761529,-117.0733037,"San Diego State University, 1 Campanile Mall, Del Cerro, San Diego, CA 92182, United States of America",CA,San Diego,8
 Southern Illinois University-Carbondale,37.7083423,-89.2275556,"Southern Illinois University Carbondale, 1263 Lincoln Drive, Lake Shore Drive Area, Carbondale, IL 62901, United States of America",IL,Carbondale,7
 Southern Illinois University-Edwardsville,38.7941616,-90.0002789,"Southern Illinois University Edwardsville, 1 Hairpin Drive, Edwardsville, IL 62026, United States of America",IL,Edwardsville,7
+Syracuse University,43.0171129,-76.1185536,"Syracuse University, Scottholm Terrace, City of Syracuse, NY 13210, United States of America",NY,Syracuse,7
 Syracuse University,43.0171129,-76.1185536,"Syracuse University, Scottholm Terrace, City of Syracuse, NY 13210, United States of America",NY,Syracuse,7
 Texas A & M University-College Station,30.6108618,-96.3520606,"Texas A&M University, 400 Bizzell Street, College Station, TX 77843, United States of America",TX,College Station,7
 Texas Tech University,33.5937525,-101.8995955,"Texas Tech University, 2500 Broadway, Lubbock, TX 79409, United States of America",TX,Lubbock,7
@@ -94,15 +115,19 @@ The University of Alabama,33.2109652,-87.5172922,"The University of Alabama - Un
 The University of Montana,45.2096759,-112.6391549,"The University of Montana Western, 710 South Atlantic Street, Dillon, MT 59725, United States of America",MT,Dillon,9
 The University of Tennessee-Knoxville,35.9545920, -83.9294349,"Knoxville, Tennessee 37996, United States of America",TN,Knoxville,3
 The University of Texas at Austin,30.2771535,-97.7344038,"The University of Texas, 1500 Red River Street, Austin, TX 78701, United States of America",TX,Austin,9
+The University of Texas at Austin,30.2771535,-97.7344038,"The University of Texas, 1500 Red River Street, Austin, TX 78701, United States of America",TX,Austin,9
 The University of Texas at San Antonio,29.583331,-98.6194451,"The University of Texas at San Antonio, 1 UTSA Circle, San Antonio, TX 78249, United States of America",TX,San Antonio,7
 Towson University,39.3869768,-76.6185804,"Towson University, 8000 York Road, Towson, MD 21204, United States of America",MD,Towson,8
 University of Arkansas,36.0970389,-94.1703322,"University of Arkansas, South Locust Avenue, Fayetteville, AR 72701, United States of America",AR,Fayetteville,7
+University of California-Santa Barbara,34.4152904730574, -119.8452342869675,"University of California, Santa Barbara, Ellison Hall, Santa Barbara, CA 93117, United States of America",CA,Santa Barbara,7
 University of California-Santa Barbara,34.4152904730574, -119.8452342869675,"University of California, Santa Barbara, Ellison Hall, Santa Barbara, CA 93117, United States of America",CA,Santa Barbara,7
 University of Colorado Boulder,40.0069373,-105.2663866,"University of Colorado Boulder (Main Campus), Boulder, CO 80309, United States of America",CO,Boulder,8
 University of Connecticut,41.8111114,-72.2483889,"University of Connecticut, North Eagleville Road, Storrs, Mansfield, CT 06269, United States of America",CT,Mansfield,7
 University of Delaware,39.6803338,-75.7530749,"University of Delaware, New London Road, Fairfield Crest, Newark, DE 19711, United States of America",DE,Newark,8
 University of Florida,29.646598592550138, -82.35330994921209,"University of Florida, Depot Avenue Rails-to-Trails Bike Path, Gainesville, FL 32611, United States of America",FL,Gainesville,7
+University of Florida,29.646598592550138, -82.35330994921209,"University of Florida, Depot Avenue Rails-to-Trails Bike Path, Gainesville, FL 32611, United States of America",FL,Gainesville,7
 University of Georgia,33.9404278,-83.373049,"University of Georgia, Athens, Georgia, United States of America",GA,Athens,7
+University of Hawaii at Manoa,21.299888124524433, -157.81482597561092,"2500 Campus Rd, Honolulu, HI 96822, United States of America",HI,Honolulu,8
 University of Hawaii at Manoa,21.299888124524433, -157.81482597561092,"2500 Campus Rd, Honolulu, HI 96822, United States of America",HI,Honolulu,8
 University of Idaho,46.7237978,-117.020439,"University of Idaho, 875 Perimeter Drive, Moscow, ID 83844, United States of America",ID,Moscow,7
 University of Louisville,38.2133223,-85.7577075,"University of Louisville, 2301 South 3rd Street, Louisville, KY 40292, United States of America",KY,Louisville,8
@@ -113,7 +138,7 @@ University of Missouri-Columbia,38.9364147,-92.329703,"University of Missouri, C
 University of Nebraska at Omaha,41.2577933,-96.0104971,"University of Nebraska at Omaha, University Drive West, Omaha, NE 68182, United States of America",NE,Omaha,9
 University of Nebraska-Lincoln,40.8305567,-96.6697373,"University of Nebraska - Lincoln (East Campus), 2000 North 33rd Street, Lincoln, NE 68503, United States of America",NE,Lincoln,9
 University of Nevada-Reno,39.5442688,-119.8163105,"University of Nevada, Reno, 1664 North Virginia Street, Reno, NV 89557, United States of America",NV,Reno,8
-University of New Mexico-Main Campus,35.09077114503785, -106.62101579821032,"1155 University Blvd SE, Albuquerque, NM 87106, United States of America",NM,Albuquerque,4
+University of New Mexico-Main Campus,35.09078846537595, -106.62101197909341,"1155 University Blvd SE, Albuquerque, NM 87106, United States of America",NM,Albuquerque,4
 University of North Carolina at Chapel Hill,35.9050353,-79.0477533,"University of North Carolina at Chapel Hill, Crabtree Drive, Carrboro, NC 27516, United States of America",NC,Carrboro,7
 University of North Carolina at Charlotte,35.3064945,-80.7349705,"The University of North Carolina at Charlotte, 9201 University City Boulevard, Charlotte, NC 28223, United States of America",NC,Charlotte,7
 University of North Texas,33.2098926,-97.1514762,"University of North Texas, 1155 Union Circle, Denton, TX 76203, United States of America",TX,Denton,7
