@@ -18,7 +18,7 @@
 <body>
     <div class="header">
         <h1>GIS Master's Programs in the US</h1>
-        <h2>Explore 174 GIS master's programs across 141 institutions in the U.S.</h2>
+        <h2>Explore 176 GIS master's programs across 143 institutions in the U.S.</h2>
         <p class="author-info">
             Yanbing Chen, 2025
             <i class="fas fa-info-circle info-icon" onclick="showInfoPopup()" onmouseover="showInfoTooltip()" onmouseout="hideInfoTooltip()"></i>
@@ -227,6 +227,26 @@
             'default': '#ffaa00'
         };
 
+        // Consistent order for multi-color dots (professional, research, mixed)
+        const TYPE_ORDER = ['professional', 'research', 'mixed'];
+
+        // Generate CSS for mixed-color dot based on unique program types
+        function getMarkerBackgroundStyle(uniqueTypes) {
+            const types = [...uniqueTypes].filter(t => t && colorMap[t]).sort(
+                (a, b) => TYPE_ORDER.indexOf(a) - TYPE_ORDER.indexOf(b)
+            );
+            if (types.length === 0) return colorMap.default;
+            if (types.length === 1) return colorMap[types[0]];
+            const colors = types.map(t => colorMap[t]);
+            if (types.length === 2) {
+                return `conic-gradient(${colors[0]} 0deg 180deg, ${colors[1]} 180deg 360deg)`;
+            }
+            if (types.length === 3) {
+                return `conic-gradient(${colors[0]} 0deg 120deg, ${colors[1]} 120deg 240deg, ${colors[2]} 240deg 360deg)`;
+            }
+            return colorMap.default;
+        }
+
         // Initialize map
         function initMap() {
             console.log('Initializing map...');
@@ -400,22 +420,19 @@
             }
 
             institutionData.forEach((data, institution) => {
-                // Determine primary program type for marker color
-                const programTypes = data.programs.map(p => p.type).filter(t => t);
-                const typeCounts = {};
-                programTypes.forEach(type => {
-                    typeCounts[type] = (typeCounts[type] || 0) + 1;
-                });
+                // Get unique program types for this institution (deduplicated)
+                const uniqueTypes = [...new Set(data.programs.map(p => (p.type || '').toLowerCase()).filter(t => t))];
 
-                const primaryType = Object.keys(typeCounts).length > 0 
-                    ? Object.keys(typeCounts).reduce((a, b) => typeCounts[a] > typeCounts[b] ? a : b)
-                    : 'default';
+                // Generate marker style: single color, dual color, or triple color
+                const bgStyle = getMarkerBackgroundStyle(uniqueTypes);
+                const isGradient = typeof bgStyle === 'string' && bgStyle.includes('conic-gradient');
+                const style = isGradient
+                    ? `background: ${bgStyle}; width: ${markerSize}px; height: ${markerSize}px; border-radius: 50%; border: ${borderWidth}px solid white; box-shadow: ${shadowSize};`
+                    : `background-color: ${bgStyle}; width: ${markerSize}px; height: ${markerSize}px; border-radius: 50%; border: ${borderWidth}px solid white; box-shadow: ${shadowSize};`;
 
-                // Create custom icon with responsive size
-                const iconColor = colorMap[primaryType] || colorMap.default;
                 const customIcon = L.divIcon({
                     className: 'custom-marker',
-                    html: `<div style="background-color: ${iconColor}; width: ${markerSize}px; height: ${markerSize}px; border-radius: 50%; border: ${borderWidth}px solid white; box-shadow: ${shadowSize};"></div>`,
+                    html: `<div style="${style}"></div>`,
                     iconSize: [markerSize, markerSize],
                     iconAnchor: [markerSize/2, markerSize/2]
                 });
