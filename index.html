@@ -19,10 +19,10 @@
     <div class="header">
         <h1>GIS Master's Programs in the US</h1>
         <h2>Explore 176 GIS master's programs across 142 institutions in the U.S.</h2>
-        <!-- <p class="author-info">
-            Yanbing Chen, 2025
+        <p class="author-info">
+            Yanbing Chen, Latest Update by June 2026
             <i class="fas fa-info-circle info-icon" onclick="showInfoPopup()" onmouseover="showInfoTooltip()" onmouseout="hideInfoTooltip()"></i>
-        </p> -->
+        </p>
     </div>
 
     <!-- Info Popup Modal -->
@@ -32,7 +32,7 @@
             <h3>About This Project</h3>
             <div class="info-text">
                 <p><strong>Project Overview:</strong></p>
-                <p>This interactive map displays GIS Master's programs across the United States, providing comprehensive and up-to-date information (as of September 2025) about <strong>174 programs</strong> at <strong>141 institutions</strong>. Each program is categorized by its primary focus—<span style="color:#56B4E9;">Professional</span>, <span style="color:#F0E442;">Research</span>, or <span style="color:#D55E00;">Mixed</span>—to help prospective students, educators, and researchers explore GIS graduate education across the U.S.</p>
+                <p>This interactive map displays GIS Master's programs across the United States. Each program is categorized by its primary focus, <span style="color:#56B4E9;">Professional</span>, <span style="color:#F0E442;">Research</span>, or <span style="color:#D55E00;">Mixed</span>, to help prospective students, educators, and researchers explore GIS graduate education across the U.S.</p>
 
                 <p>This visualization is one of the map products developed for my M.S. thesis titled <em>“GIScience Education from Faculty Careers to Student Training: A Dual Perspective on Academic and Professional Development.”</em> The project aims to analyze trends in GIS education by synthesizing faculty hiring data, curriculum structures, and program-level characteristics across academic and professional tracks. </p>
                     
@@ -219,6 +219,14 @@
         let allData = [];
         let institutionData = new Map();
 
+        // Low-zoom pixel offset only for Georgia Tech + Georgia State (Atlanta pair)
+        const ATLANTA_OFFSET_PAIR = [
+            'Georgia Institute of Technology-Main Campus',
+            'Georgia State University'
+        ];
+        const OVERLAP_OFFSET_UNTIL_ZOOM = 8;
+        const OFFSET_RADIUS_PX = 18;
+
         // Color scheme for program types
         const colorMap = {
             'professional': '#56B4E9',
@@ -263,8 +271,38 @@
                 attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
                 ext: 'png'
             }).addTo(map);
-            
+
             console.log('Map initialized successfully');
+        }
+
+        function getMarkerLatLng(data) {
+            if (map.getZoom() > OVERLAP_OFFSET_UNTIL_ZOOM) {
+                return [data.latitude, data.longitude];
+            }
+
+            const pairIndex = ATLANTA_OFFSET_PAIR.indexOf(data.institution);
+            if (pairIndex === -1) {
+                return [data.latitude, data.longitude];
+            }
+
+            const partnerName = ATLANTA_OFFSET_PAIR[1 - pairIndex];
+            const partner = institutionData.get(partnerName);
+            if (!partner) {
+                return [data.latitude, data.longitude];
+            }
+
+            const centroid = [
+                (data.latitude + partner.latitude) / 2,
+                (data.longitude + partner.longitude) / 2
+            ];
+            const angle = pairIndex * Math.PI - Math.PI / 2;
+            const centerPoint = map.latLngToContainerPoint(centroid);
+            const offsetPoint = L.point(
+                centerPoint.x + OFFSET_RADIUS_PX * Math.cos(angle),
+                centerPoint.y + OFFSET_RADIUS_PX * Math.sin(angle)
+            );
+            const latLng = map.containerPointToLatLng(offsetPoint);
+            return [latLng.lat, latLng.lng];
         }
 
         // Load and process data
@@ -378,7 +416,6 @@
 
         // Create markers on map
         function createMarkers() {
-            // Clear existing markers
             markers.forEach(marker => map.removeLayer(marker));
             markers = [];
 
@@ -439,9 +476,9 @@
 
                 // Create popup content
                 const popupContent = createPopupContent(data);
+                const markerLatLng = getMarkerLatLng(data);
 
-                // Create marker
-                const marker = L.marker([data.latitude, data.longitude], { icon: customIcon })
+                const marker = L.marker(markerLatLng, { icon: customIcon })
                     .bindTooltip(data.institution, {
                         permanent: false,
                         direction: 'top',
@@ -735,7 +772,6 @@
                     show = false;
                 }
 
-                // Show/hide marker
                 if (show) {
                     marker.addTo(map);
                     visibleCount++;
@@ -754,7 +790,6 @@
             document.getElementById('location-filter').value = '';
             document.getElementById('search-filter').value = '';
 
-            // Show all markers
             markers.forEach(marker => marker.addTo(map));
             updateStats();
         }
@@ -768,6 +803,7 @@
         function addZoomListener() {
             map.on('zoomend', function() {
                 createMarkers();
+                applyFilters();
             });
         }
 
