@@ -39,8 +39,8 @@ body {
     position: absolute;
     bottom: 10px;
     right: 20px;
-    font-size: 0.9em;
-    opacity: 0.8;
+    font-size: 0.74em;
+    opacity: 0.72;
     margin: 0;
 }
 
@@ -764,7 +764,7 @@ select, input, button {
 .info-modal-content {
     background-color: white;
     margin: 5% auto; /* 减少顶部边距，给更多空间 */
-    padding: 30px;
+    padding: 20px 22px;
     border-radius: 12px;
     width: 50%;
     max-width: 800px;
@@ -778,24 +778,22 @@ select, input, button {
 
 .info-modal-content h3 {
     color: #34495e;
-    margin-bottom: 20px;
-    font-size: 1.5em;
+    margin-bottom: 12px;
+    font-size: 1.25em;
     border-bottom: 2px solid #34495e;
-    padding-bottom: 10px;
-    position: sticky; /* 标题固定 */
-    top: 0;
-    background: white;
-    z-index: 10;
+    padding-bottom: 6px;
+    padding-right: 36px; /* Leave room for the close button */
 }
 
 .info-text {
-    line-height: 1.6;
+    font-size: 0.88em;
+    line-height: 1.35;
     color: #333;
-    padding-bottom: 20px; /* 底部留白 */
+    padding-bottom: 10px; /* 底部留白 */
 }
 
 .info-text p {
-    margin-bottom: 15px;
+    margin-bottom: 8px;
 }
 
 .info-text strong {
@@ -872,22 +870,19 @@ select, input, button {
         width: 95%;
         min-width: 300px;
         margin: 2% auto; /* 更小的边距 */
-        padding: 20px;
+        padding: 16px 18px;
         max-height: 96vh; /* 移动端更多空间 */
     }
     
     .info-modal-content h3 {
-        font-size: 1.3em;
-        position: sticky;
-        top: 0;
-        background: white;
-        padding: 10px 0;
-        margin-bottom: 15px;
+        font-size: 1.12em;
+        padding: 6px 36px 6px 0;
+        margin-bottom: 10px;
     }
     
     .info-text {
-        font-size: 14px;
-        line-height: 1.5;
+        font-size: 12px;
+        line-height: 1.35;
     }
     
     .close {
@@ -901,16 +896,16 @@ select, input, button {
     .info-modal-content {
         width: 98%;
         margin: 1% auto;
-        padding: 15px;
+        padding: 12px 14px;
         max-height: 98vh;
     }
     
     .info-modal-content h3 {
-        font-size: 1.2em;
+        font-size: 1.02em;
     }
     
     .info-text {
-        font-size: 13px;
+        font-size: 11px;
     }
 }
 
