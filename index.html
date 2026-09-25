@@ -56,7 +56,8 @@
                 <p><strong>Features:</strong></p>
                 <p>• Interactive filtering by state, program type, and format<br>
                 • Detailed program information in popups<br>
-                • Save programs to wishlist or add notes<br>
+                • Browse matching programs in a sortable list<br>
+                • Save programs and edit personal notes<br>
                 • Export saved programs to CSV</p>
 
                 <p><strong>Author:</strong></p>
@@ -87,6 +88,10 @@
                     <div class="stat-item">
                         <span><strong># of Matching Institutions:</strong></span>
                         <span id="visible-count">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Matching Programs:</span>
+                        <span id="matching-program-count">-</span>
                     </div>
                 </div>
 
@@ -151,11 +156,24 @@
                 </div>
             </div>
 
-            <div class="export-section">
-                <button class="export-btn" onclick="exportToCSV()">
-                    <i class="fas fa-download"></i> Download Saved Programs
-                </button>
-            </div>
+            <details class="saved-panel" id="saved-panel">
+                <summary>Saved Programs <span id="saved-count">0</span></summary>
+                <p class="saved-help">Saved in this browser. Download a CSV to keep a copy.</p>
+                <div id="saved-list"></div>
+                <button class="export-btn" id="saved-export" type="button" onclick="exportToCSV()">Download Saved Programs</button>
+            </details>
+
+            <section class="results-section" aria-labelledby="results-heading">
+                <div class="results-heading-row">
+                    <h3 id="results-heading">Matching Programs</h3>
+                    <select id="results-sort" aria-label="Sort matching programs">
+                        <option value="school">School A–Z</option>
+                        <option value="program">Program A–Z</option>
+                        <option value="state">State A–Z</option>
+                    </select>
+                </div>
+                <div id="results-list" class="results-list"></div>
+            </section>
         </div>
 
         <div class="map-container">
@@ -168,6 +186,8 @@
             </div>
         </div>
     </div>
+
+    <div id="action-status" class="action-status" role="status" aria-live="polite"></div>
 
     <!-- Suggest Edit Modal -->
     <div id="suggestEditModal" class="suggest-edit-modal">
@@ -231,6 +251,8 @@
         let allData = [];
         let institutionData = new Map();
         let programTracks = new Map();
+        let matchingPrograms = [];
+        let matchingProgramKeys = new Set();
 
         // Low-zoom pixel offset only for Georgia Tech + Georgia State (Atlanta pair)
         const ATLANTA_OFFSET_PAIR = [
@@ -371,7 +393,9 @@
                 createMarkers();
                 populateFilters();
                 updateStats();
-                updateAllNoteDisplays();
+                reconcileSavedPrograms();
+                applyFilters();
+                renderSavedPanel();
 
                 console.log('Data loading completed successfully');
 
@@ -407,36 +431,6 @@
                     return true;
                 }
                 return false;
-            });
-        }
-
-        // Process data to group by institution
-        function processData() {
-            institutionData.clear();
-
-            allData.forEach(program => {
-                const key = program.Institution;
-                if (!institutionData.has(key)) {
-                    institutionData.set(key, {
-                        institution: program.Institution,
-                        latitude: program.latitude,
-                        longitude: program.longitude,
-                        state: program.state,
-                        city: program.city,
-                        address: program.address,
-                        programs: []
-                    });
-                }
-
-                institutionData.get(key).programs.push({
-                    name: program.Program,
-                    link: program.link,
-                    type: program['program type'],
-                    graduation: program['graduation requirement'],
-                    duration: program.duration,
-                    location: program.location,
-                    institutionType: program['institution type']
-                });
             });
         }
 
@@ -500,8 +494,6 @@
                     iconAnchor: [markerSize/2, markerSize/2]
                 });
 
-                // Create popup content
-                const popupContent = createPopupContent(data);
                 const markerLatLng = getMarkerLatLng(data);
 
                 const marker = L.marker(markerLatLng, { icon: customIcon })
@@ -511,7 +503,7 @@
                         offset: [0, -10],
                         className: 'custom-tooltip'
                     })
-                    .bindPopup(popupContent, { maxWidth: 450 })
+                    .bindPopup(() => createPopupContent(data), { maxWidth: 450 })
                     .addTo(map);
 
                 // Store additional data with marker
@@ -528,19 +520,21 @@
         }
 
         function createPopupContent(data) {
+            const displayedPrograms = data.programs.filter(program => matchingProgramKeys.has(program.key));
             let content = `
                 <div class="popup-content">
-                    <div class="popup-header">${data.institution}</div>
-                    <p><strong>State:</strong> ${data.state || 'N/A'}</p>
-                    <p><strong>City:</strong> ${data.city || 'N/A'}</p>
-                    <p><strong>Total Programs:</strong> ${data.programs.length}</p>
+                    <div class="popup-header">${escapeHtml(data.institution)}</div>
+                    <p><strong>State:</strong> ${escapeHtml(data.state || 'N/A')}</p>
+                    <p><strong>City:</strong> ${escapeHtml(data.city || 'N/A')}</p>
+                    <p><strong>Matching Programs:</strong> ${displayedPrograms.length} of ${data.programs.length}</p>
                     <hr style="margin: 10px 0;">
             `;
 
-            data.programs.forEach((program, index) => {
-                const link = program.link && program.link !== 'N/A' ? program.link : '#';
+            displayedPrograms.forEach(program => {
+                const link = /^https?:\/\//i.test(program.link) ? program.link : '#';
                 const typeColor = colorMap[program.type] || colorMap.default;
-                const programId = `${data.institution}_${index}`;
+                const key = program.key;
+                const saved = savedPrograms.find(item => item.programId === key);
                 const tracksHtml = program.tracks.length ? `
                     <div class="program-tracks">
                         <strong>Tracks:</strong>
@@ -552,27 +546,28 @@
                 ` : '';
                 
                 content += `
-                    <div class="program-item" style="border-left-color: ${typeColor};">
+                    <div class="program-item" data-program-key="${escapeHtml(key)}" style="border-left-color: ${typeColor};">
                         <div class="program-title">
-                            <a href="${link}" target="_blank">${program.name || 'N/A'}</a>
+                            <a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(program.name || 'N/A')}</a>
                         </div>
                         <div class="program-details">
-                            <span><strong>Type:</strong> ${program.type || 'N/A'}</span>
-                            <span><strong>Format:</strong> ${program.location || 'N/A'}</span>
+                            <span><strong>Type:</strong> ${escapeHtml(program.type || 'N/A')}</span>
+                            <span><strong>Format:</strong> ${escapeHtml(program.location || 'N/A')}</span>
                             <br>
-                            <span><strong>Duration:</strong> ${program.duration || 'N/A'}</span>
-                            <span><strong>Graduation:</strong> ${program.graduation || 'N/A'}</span>
+                            <span><strong>Duration:</strong> ${escapeHtml(program.duration || 'N/A')}</span>
+                            <span><strong>Graduation:</strong> ${escapeHtml(program.graduation || 'N/A')}</span>
                         </div>
                         ${tracksHtml}
-                        <div class="user-notes" data-program-id="${programId}">
+                        <div class="user-notes">
                             <div class="note-buttons">
-                                <button class="note-btn wishlist-btn" onclick="addToWishlist('${programId}')">
-                                    <span class="wishlist-icon">⭐</span> Add to Wishlist
-                                </button>
-                                <button class="note-btn note-btn" onclick="addNote('${programId}')">
-                                    <span class="note-icon">📝</span> Add Note
-                                </button>
+                                <button class="note-btn save-toggle ${saved ? 'is-saved' : ''}" type="button" aria-pressed="${Boolean(saved)}">${saved ? '★ Saved' : '☆ Save'}</button>
+                                <button class="note-btn note-toggle" type="button">${saved?.note ? 'Edit note' : 'Add note'}</button>
                             </div>
+                            <form class="note-form" hidden>
+                                <label>Personal note<textarea maxlength="2000">${escapeHtml(saved?.note || '')}</textarea></label>
+                                <button type="submit">Save note</button>
+                            </form>
+                            ${saved?.note ? `<p class="saved-note-preview">${escapeHtml(saved.note)}</p>` : ''}
                         </div>
                     </div>
                 `;
@@ -582,81 +577,119 @@
             return content;
         }
 
-        // Simple CSV export functionality
-        let savedPrograms = JSON.parse(localStorage.getItem('savedPrograms') || '[]');
-
-        function addToWishlist(programId) {
-            // Find the program data
-            const programData = findProgramById(programId);
-            if (programData) {
-                // Check if already exists
-                const exists = savedPrograms.find(p => p.programId === programId);
-                if (!exists) {
-                    savedPrograms.push({
-                        ...programData,
-                        programId: programId,
-                        type: 'Wishlist',
-                        note: '',
-                        dateAdded: new Date().toISOString()
-                    });
-                    localStorage.setItem('savedPrograms', JSON.stringify(savedPrograms));
-                    alert('Added to wishlist!');
-                } else {
-                    alert('Already in wishlist!');
-                }
-            }
+        // Keep the 2025 browser data and use institution + program name as a stable key.
+        let savedPrograms;
+        try {
+            const stored = JSON.parse(localStorage.getItem('savedPrograms') || '[]');
+            savedPrograms = Array.isArray(stored) ? stored : [];
+        } catch {
+            savedPrograms = [];
         }
 
-        function addNote(programId) {
-            const note = prompt('Enter your note:');
-            if (note && note.trim()) {
-                // Find the program data
-                const programData = findProgramById(programId);
-                if (programData) {
-                    // Check if already exists
-                    const exists = savedPrograms.find(p => p.programId === programId);
-                    if (exists) {
-                        // Update existing note
-                        exists.note = note.trim();
-                        exists.type = exists.type + ' + Note';
-                    } else {
-                        // Add new entry
-                        savedPrograms.push({
-                            ...programData,
-                            programId: programId,
-                            type: 'Note',
-                            note: note.trim(),
-                            dateAdded: new Date().toISOString()
-                        });
-                    }
-                    localStorage.setItem('savedPrograms', JSON.stringify(savedPrograms));
-                    alert('Note added!');
-                }
-            }
+        function programKey(program) {
+            return `${program.Institution}\u001f${program.Program.trim()}`;
         }
 
-        function findProgramById(programId) {
-            // Parse programId to find the program
-            const parts = programId.split('_');
-            const institution = parts[0];
-            const programIndex = parseInt(parts[1]);
-            
-            // Find in allData
-            let currentIndex = 0;
-            for (let i = 0; i < allData.length; i++) {
-                if (allData[i].Institution === institution) {
-                    if (currentIndex === programIndex) {
-                        return allData[i];
-                    }
-                    currentIndex++;
-                }
+        function saveStoredPrograms() {
+            localStorage.setItem('savedPrograms', JSON.stringify(savedPrograms));
+            renderSavedPanel();
+            renderResults();
+        }
+
+        function reconcileSavedPrograms() {
+            const current = new Map(allData.map(program => [programKey(program), program]));
+            const seen = new Set();
+            savedPrograms = savedPrograms.map(saved => {
+                if (!saved.Institution || !saved.Program) return null;
+                const key = programKey(saved);
+                if (seen.has(key)) return null;
+                seen.add(key);
+                return {
+                    ...(current.get(key) || saved),
+                    programId: key,
+                    note: saved.note || '',
+                    dateAdded: saved.dateAdded || new Date().toISOString()
+                };
+            }).filter(Boolean);
+            localStorage.setItem('savedPrograms', JSON.stringify(savedPrograms));
+        }
+
+        function showStatus(message) {
+            const status = document.getElementById('action-status');
+            status.textContent = message;
+            status.classList.add('visible');
+            clearTimeout(showStatus.timeout);
+            showStatus.timeout = setTimeout(() => status.classList.remove('visible'), 3000);
+        }
+
+        function toggleSaved(key) {
+            const index = savedPrograms.findIndex(item => item.programId === key);
+            if (index >= 0) {
+                savedPrograms.splice(index, 1);
+                showStatus('Removed from Saved Programs.');
+            } else {
+                const program = allData.find(item => programKey(item) === key);
+                if (!program) return;
+                savedPrograms.push({ ...program, programId: key, note: '', dateAdded: new Date().toISOString() });
+                showStatus('Added to Saved Programs.');
             }
-            return null;
+            saveStoredPrograms();
+            refreshOpenPopup();
+        }
+
+        function saveNote(key, note) {
+            let saved = savedPrograms.find(item => item.programId === key);
+            if (!saved) {
+                const program = allData.find(item => programKey(item) === key);
+                if (!program) return;
+                saved = { ...program, programId: key, dateAdded: new Date().toISOString() };
+                savedPrograms.push(saved);
+            }
+            saved.note = note.trim();
+            saveStoredPrograms();
+            refreshOpenPopup();
+            showStatus('Note saved.');
+        }
+
+        function refreshOpenPopup() {
+            const open = markers.find(marker => marker.isPopupOpen());
+            if (!open) return;
+            const scrollTop = open.getPopup().getElement()?.querySelector('.popup-content')?.scrollTop || 0;
+            open.setPopupContent(createPopupContent(open.institutionData));
+            const content = open.getPopup().getElement()?.querySelector('.popup-content');
+            if (content) content.scrollTop = scrollTop;
+        }
+
+        function renderSavedPanel() {
+            document.getElementById('saved-count').textContent = savedPrograms.length;
+            document.getElementById('saved-export').disabled = savedPrograms.length === 0;
+            const list = document.getElementById('saved-list');
+            if (!savedPrograms.length) {
+                list.innerHTML = '<p class="empty-state">No saved programs yet. Use Save on a program to start a shortlist.</p>';
+                return;
+            }
+            list.innerHTML = savedPrograms.map(program => {
+                const key = escapeHtml(program.programId);
+                const link = /^https?:\/\//i.test(program.link) ? program.link : '#';
+                return `<article class="saved-card" data-program-key="${key}">
+                    <strong>${escapeHtml(program.Institution)}</strong>
+                    <a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(program.Program)}</a>
+                    <div class="saved-card-actions">
+                        <button type="button" class="note-toggle">${program.note ? 'Edit note' : 'Add note'}</button>
+                        <button type="button" class="saved-remove">Remove</button>
+                    </div>
+                    <form class="note-form" hidden>
+                        <label>Personal note<textarea maxlength="2000">${escapeHtml(program.note || '')}</textarea></label>
+                        <button type="submit">Save note</button>
+                    </form>
+                    ${program.note ? `<p class="saved-note-preview">${escapeHtml(program.note)}</p>` : ''}
+                </article>`;
+            }).join('');
         }
 
         function exportToCSV() {
             if (savedPrograms.length === 0) {
-                alert('No saved programs found! Please add some programs to wishlist or add notes first.');
+                showStatus('Save a program before downloading.');
                 return;
             }
 
@@ -672,7 +705,6 @@
                     'Duration': program.duration || 'N/A',
                     'Graduation Requirement': program['graduation requirement'] || 'N/A',
                     'Link': program.link || 'N/A',
-                    'Saved Type': program.type || 'N/A',
                     'Note': program.note || 'N/A',
                     'Date Added': program.dateAdded || 'N/A'
                 }));
@@ -681,11 +713,11 @@
                 const csvContent = convertToCSV(csvData);
                 downloadCSV(csvContent, 'saved_programs.csv');
                 
-                alert(`Exported ${savedPrograms.length} programs to CSV!`);
+                showStatus(`Downloaded ${savedPrograms.length} saved programs.`);
 
             } catch (error) {
                 console.error('Export failed:', error);
-                alert('Export failed: ' + error.message);
+                showStatus('Download failed. Please try again.');
             }
         }
 
@@ -721,7 +753,7 @@
             URL.revokeObjectURL(url);
         }
 
-        // Missing functions for statistics and filters
+        // Group programs by institution for map markers.
         function processData() {
             institutionData.clear();
 
@@ -740,6 +772,7 @@
                 }
 
                 institutionData.get(key).programs.push({
+                    key: programKey(program),
                     name: program.Program,
                     link: program.link,
                     type: program['program type'],
@@ -787,44 +820,63 @@
             const stateFilter = document.getElementById('state-filter').value;
             const typeFilter = document.getElementById('type-filter').value;
             const locationFilter = document.getElementById('location-filter').value;
-            const searchFilter = document.getElementById('search-filter').value.toLowerCase();
+            const searchFilter = document.getElementById('search-filter').value.trim().toLowerCase();
 
-            let visibleCount = 0;
+            matchingPrograms = allData.filter(program =>
+                (!stateFilter || program.state === stateFilter) &&
+                (!typeFilter || program['program type'] === typeFilter) &&
+                (!locationFilter || program.location === locationFilter) &&
+                (!searchFilter || `${program.Institution} ${program.Program}`.toLowerCase().includes(searchFilter))
+            );
+            matchingProgramKeys = new Set(matchingPrograms.map(programKey));
+            const matchingSchools = new Set(matchingPrograms.map(program => program.Institution));
 
             markers.forEach(marker => {
-                const data = marker.institutionData;
-                let show = true;
-
-                // State filter
-                if (stateFilter && data.state !== stateFilter) {
-                    show = false;
-                }
-
-                // Type filter
-                if (typeFilter && !data.programs.some(p => p.type === typeFilter)) {
-                    show = false;
-                }
-
-                // Location filter
-                if (locationFilter && !data.programs.some(p => p.location === locationFilter)) {
-                    show = false;
-                }
-
-                // Search filter
-                if (searchFilter && !data.institution.toLowerCase().includes(searchFilter)) {
-                    show = false;
-                }
-
-                if (show) {
+                if (matchingSchools.has(marker.institutionData.institution)) {
                     marker.addTo(map);
-                    visibleCount++;
                 } else {
                     map.removeLayer(marker);
                 }
             });
 
-            // Update visible count
-            document.getElementById('visible-count').textContent = visibleCount;
+            document.getElementById('visible-count').textContent = matchingSchools.size;
+            document.getElementById('matching-program-count').textContent = matchingPrograms.length;
+            renderResults();
+        }
+
+        function renderResults() {
+            const sort = document.getElementById('results-sort').value;
+            const sorted = [...matchingPrograms].sort((a, b) => {
+                const field = sort === 'program' ? 'Program' : sort === 'state' ? 'state' : 'Institution';
+                const first = String(a[field] || '').localeCompare(String(b[field] || ''));
+                return first || a.Institution.localeCompare(b.Institution) || a.Program.localeCompare(b.Program);
+            });
+            const list = document.getElementById('results-list');
+            if (!sorted.length) {
+                list.innerHTML = '<p class="empty-state">No programs match these filters. Try clearing one.</p>';
+                return;
+            }
+            list.innerHTML = sorted.map(program => {
+                const key = escapeHtml(programKey(program));
+                const saved = savedPrograms.some(item => item.programId === programKey(program));
+                return `<article class="result-card" data-program-key="${key}">
+                    <button type="button" class="result-focus">${escapeHtml(program.Institution)}<span>${escapeHtml(program.Program)}</span></button>
+                    <div class="result-meta">${escapeHtml(program.state || '')} · ${escapeHtml(program['program type'] || '')} · ${escapeHtml(program.location || '')}</div>
+                    <button type="button" class="note-btn save-toggle ${saved ? 'is-saved' : ''}" aria-pressed="${saved}">${saved ? '★ Saved' : '☆ Save'}</button>
+                </article>`;
+            }).join('');
+        }
+
+        function focusProgram(key) {
+            const program = allData.find(item => programKey(item) === key);
+            const marker = markers.find(item => item.institutionData.institution === program?.Institution);
+            if (!marker) return;
+            map.panTo(marker.getLatLng());
+            marker.openPopup();
+            const target = marker.getPopup().getElement()?.querySelectorAll('.program-item');
+            const item = [...(target || [])].find(element => element.dataset.programKey === key);
+            item?.scrollIntoView({ block: 'nearest' });
+            if (window.innerWidth <= 768) document.getElementById('map').scrollIntoView({ behavior: 'smooth' });
         }
 
         function clearFilters() {
@@ -833,14 +885,14 @@
             document.getElementById('location-filter').value = '';
             document.getElementById('search-filter').value = '';
 
-            markers.forEach(marker => marker.addTo(map));
-            updateStats();
+            applyFilters();
         }
 
         function updateStats() {
             document.getElementById('total-institutions').textContent = institutionData.size;
             document.getElementById('total-programs').textContent = allData.length;
             document.getElementById('visible-count').textContent = markers.length;
+            document.getElementById('matching-program-count').textContent = allData.length;
             document.getElementById('inventory-subtitle').textContent =
                 `Explore ${allData.length} GIS master's programs across ${institutionData.size} institutions in the U.S.`;
         }
@@ -896,18 +948,6 @@
                 closeInfoPopup();
             }
         });
-
-        // Update all note displays when page loads
-        function updateAllNoteDisplays() {
-            setTimeout(() => {
-                Object.keys(userNotes).forEach(programId => {
-                    const element = document.getElementById(`saved-notes-${programId}`);
-                    if (element) {
-                        updateNoteDisplay(programId);
-                    }
-                });
-            }, 100);
-        }
 
         // Suggest Edit Modal functions
         function showSuggestEditModal() {
@@ -978,10 +1018,30 @@ Timestamp: ${formData.timestamp}
             initMap();
             loadData();
             addZoomListener();
-            updateAllNoteDisplays(); 
+            renderSavedPanel();
 
-            // Add real-time search
+            document.getElementById('results-sort').addEventListener('change', renderResults);
             document.getElementById('search-filter').addEventListener('input', applyFilters);
+            document.addEventListener('click', event => {
+                const card = event.target.closest('[data-program-key]');
+                if (!card) return;
+                const key = card.dataset.programKey;
+                if (event.target.closest('.save-toggle, .saved-remove')) {
+                    toggleSaved(key);
+                } else if (event.target.closest('.note-toggle')) {
+                    const form = card.querySelector('.note-form');
+                    form.hidden = !form.hidden;
+                    if (!form.hidden) form.querySelector('textarea').focus();
+                } else if (event.target.closest('.result-focus')) {
+                    focusProgram(key);
+                }
+            });
+            document.addEventListener('submit', event => {
+                const form = event.target.closest('.note-form');
+                if (!form) return;
+                event.preventDefault();
+                saveNote(form.closest('[data-program-key]').dataset.programKey, form.querySelector('textarea').value);
+            });
         });
     </script>
 </body>

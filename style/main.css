@@ -649,6 +649,184 @@ select, input, button {
     background: #e9ecef;
 }
 
+.save-toggle.is-saved {
+    background: #fff3cd;
+    border-color: #e5b84a;
+    color: #483600;
+}
+
+.note-form[hidden] {
+    display: none;
+}
+
+.note-form label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.note-form textarea {
+    display: block;
+    width: 100%;
+    min-height: 70px;
+    margin: 5px 0;
+    padding: 8px;
+    border: 1px solid #aab2ba;
+    border-radius: 4px;
+    resize: vertical;
+    font: inherit;
+}
+
+.note-form button,
+.saved-card-actions button {
+    padding: 6px 9px;
+    border: 1px solid #9aa5ae;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+}
+
+.saved-note-preview {
+    margin-top: 7px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 12px;
+    color: #475569;
+}
+
+.saved-panel,
+.results-section {
+    margin: 18px 0;
+    padding-top: 14px;
+    border-top: 2px solid #e2e8f0;
+}
+
+.saved-panel summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: #34495e;
+}
+
+#saved-count {
+    display: inline-block;
+    min-width: 22px;
+    padding: 2px 6px;
+    border-radius: 12px;
+    background: #34495e;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+}
+
+.saved-help,
+.empty-state {
+    margin: 10px 0;
+    color: #586675;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.saved-card,
+.result-card {
+    padding: 10px 0;
+    border-bottom: 1px solid #e2e8f0;
+    overflow-wrap: anywhere;
+}
+
+.saved-card strong,
+.saved-card a {
+    display: block;
+    font-size: 13px;
+}
+
+.saved-card a {
+    margin-top: 3px;
+}
+
+.saved-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.results-heading-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.results-heading-row h3 {
+    font-size: 15px;
+    color: #34495e;
+}
+
+.results-heading-row select {
+    max-width: 120px;
+    padding: 5px;
+    border: 1px solid #aab2ba;
+    border-radius: 4px;
+}
+
+.results-list {
+    max-height: 370px;
+    overflow-y: auto;
+}
+
+.result-focus {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    text-align: left;
+    color: #205b9c;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.result-focus span {
+    display: block;
+    margin-top: 3px;
+    color: #34495e;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.result-meta {
+    margin: 6px 0;
+    color: #586675;
+    font-size: 11px;
+}
+
+.action-status {
+    position: fixed;
+    bottom: 20px;
+    left: 320px;
+    z-index: 2200;
+    padding: 10px 14px;
+    border-radius: 6px;
+    background: #20384f;
+    color: white;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.action-status.visible {
+    opacity: 1;
+}
+
+.export-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .results-list { max-height: 230px; }
+    .action-status { left: 12px; right: 12px; bottom: 12px; }
+}
+
 .wishlist-btn.active {
     background: #fff3cd;
     border-color: #ffeaa7;
