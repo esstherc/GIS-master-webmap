@@ -1,6 +1,6 @@
 # 2026 GIS Master's Program Inventory: Annual Changes
 
-Updated September 25, 2026. This report compares the 2026 map inventory with its 2025 edition. An addition to the inventory does not necessarily mean a degree was first offered in 2026.
+Updated September 25, 2026. This report compares the 2026 map inventory with its 2025 edition.
 
 ## Inventory reconciliation
 
