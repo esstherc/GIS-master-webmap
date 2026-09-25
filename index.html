@@ -55,9 +55,11 @@
                 
                 <p><strong>Features:</strong></p>
                 <p>• Interactive filtering by state, program type, and format<br>
+                • Visible, removable filter selections<br>
                 • Detailed program information in popups<br>
                 • Browse matching programs in a sortable list<br>
                 • Save programs and edit personal notes<br>
+                • Compare two to four saved programs<br>
                 • Export saved programs to CSV</p>
 
                 <p><strong>Author:</strong></p>
@@ -114,7 +116,11 @@
 
             <div class="filter-section">
                 <h3><i class="fas fa-filter"></i> Filters</h3>
-                
+                <button type="button" id="mobile-filter-toggle" class="mobile-filter-toggle" aria-controls="filter-controls" aria-expanded="false">
+                    <span><i class="fas fa-filter"></i> Filters <span id="mobile-filter-count">0</span></span>
+                    <span class="filter-toggle-label">Show filters</span>
+                </button>
+                <div id="filter-controls">
                 <div class="filters-grid">
                     <div class="filter-group">
                         <label for="state-filter">State:</label>
@@ -154,12 +160,17 @@
                         <i class="fas fa-times"></i> Clear All
                     </button>
                 </div>
+                </div>
             </div>
+
+            <div id="active-filters" class="active-filters" aria-label="Applied filters"></div>
 
             <details class="saved-panel" id="saved-panel">
                 <summary>Saved Programs <span id="saved-count">0</span></summary>
                 <p class="saved-help">Saved in this browser. Download a CSV to keep a copy.</p>
+                <p class="saved-help" id="compare-help">Select 2–4 saved programs to compare.</p>
                 <div id="saved-list"></div>
+                <button class="compare-open" id="compare-open" type="button" disabled>Compare selected (0)</button>
                 <button class="export-btn" id="saved-export" type="button" onclick="exportToCSV()">Download Saved Programs</button>
             </details>
 
@@ -188,6 +199,17 @@
     </div>
 
     <div id="action-status" class="action-status" role="status" aria-live="polite"></div>
+
+    <div id="compareModal" class="compare-modal" role="dialog" aria-modal="true" aria-labelledby="compare-title" hidden>
+        <div class="compare-dialog">
+            <div class="compare-header">
+                <h2 id="compare-title">Compare saved programs</h2>
+                <button type="button" id="compare-close" aria-label="Close comparison">×</button>
+            </div>
+            <p>Scroll sideways to see all selected programs. Notes can be edited in Saved Programs.</p>
+            <div class="compare-scroll" id="compare-content"></div>
+        </div>
+    </div>
 
     <!-- Suggest Edit Modal -->
     <div id="suggestEditModal" class="suggest-edit-modal">
@@ -579,6 +601,7 @@
 
         // Keep the 2025 browser data and use institution + program name as a stable key.
         let savedPrograms;
+        const compareSelection = new Set();
         try {
             const stored = JSON.parse(localStorage.getItem('savedPrograms') || '[]');
             savedPrograms = Array.isArray(stored) ? stored : [];
@@ -661,8 +684,11 @@
         }
 
         function renderSavedPanel() {
+            const savedKeys = new Set(savedPrograms.map(program => program.programId));
+            for (const key of compareSelection) if (!savedKeys.has(key)) compareSelection.delete(key);
             document.getElementById('saved-count').textContent = savedPrograms.length;
             document.getElementById('saved-export').disabled = savedPrograms.length === 0;
+            updateCompareControls();
             const list = document.getElementById('saved-list');
             if (!savedPrograms.length) {
                 list.innerHTML = '<p class="empty-state">No saved programs yet. Use Save on a program to start a shortlist.</p>';
@@ -674,6 +700,7 @@
                 return `<article class="saved-card" data-program-key="${key}">
                     <strong>${escapeHtml(program.Institution)}</strong>
                     <a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(program.Program)}</a>
+                    <label class="compare-choice"><input type="checkbox" class="compare-select" ${compareSelection.has(program.programId) ? 'checked' : ''} ${compareSelection.size >= 4 && !compareSelection.has(program.programId) ? 'disabled' : ''} aria-label="Compare ${escapeHtml(program.Institution)}: ${escapeHtml(program.Program)}"> Compare</label>
                     <div class="saved-card-actions">
                         <button type="button" class="note-toggle">${program.note ? 'Edit note' : 'Add note'}</button>
                         <button type="button" class="saved-remove">Remove</button>
@@ -685,6 +712,53 @@
                     ${program.note ? `<p class="saved-note-preview">${escapeHtml(program.note)}</p>` : ''}
                 </article>`;
             }).join('');
+        }
+
+        function updateCompareControls() {
+            const count = compareSelection.size;
+            const button = document.getElementById('compare-open');
+            button.textContent = `Compare selected (${count})`;
+            button.disabled = count < 2 || count > 4;
+            document.getElementById('compare-help').textContent = count >= 4
+                ? 'Four selected. Deselect one to choose another.'
+                : `Select 2–4 saved programs to compare. ${count} selected.`;
+            document.querySelectorAll('.compare-select').forEach(input => {
+                input.disabled = count >= 4 && !input.checked;
+            });
+        }
+
+        function openComparison() {
+            const programs = [...compareSelection].map(key => savedPrograms.find(program => program.programId === key)).filter(Boolean);
+            if (programs.length < 2 || programs.length > 4) return;
+            const rows = [
+                ['School', program => program.Institution],
+                ['Program', program => program.Program],
+                ['Type', program => program['program type']],
+                ['Format', program => program.location],
+                ['Duration', program => program.duration],
+                ['Graduation requirement', program => program['graduation requirement']],
+                ['Official page', program => /^https?:\/\//i.test(program.link)
+                    ? `<a href="${escapeHtml(program.link)}" target="_blank" rel="noopener noreferrer">Visit program page</a>` : 'Not available'],
+                ['Personal note', program => program.note]
+            ];
+            document.getElementById('compare-content').innerHTML = `<table class="compare-table" style="min-width:${155 + 220 * programs.length}px">
+                <thead><tr><th scope="col">Detail</th>${programs.map((_, index) => `<th scope="col">Program ${index + 1}</th>`).join('')}</tr></thead>
+                <tbody>${rows.map(([label, value]) => `<tr><th scope="row">${label}</th>${programs.map(program => {
+                    const result = value(program);
+                    return `<td>${label === 'Official page' ? result : escapeHtml(result || '—')}</td>`;
+                }).join('')}</tr>`).join('')}</tbody>
+            </table>`;
+            document.getElementById('compareModal').hidden = false;
+            document.body.style.overflow = 'hidden';
+            document.getElementById('compare-close').focus();
+        }
+
+        function closeComparison() {
+            const modal = document.getElementById('compareModal');
+            if (modal.hidden) return;
+            modal.hidden = true;
+            document.body.style.overflow = 'auto';
+            document.getElementById('compare-open').focus();
         }
 
         function exportToCSV() {
@@ -841,7 +915,38 @@
 
             document.getElementById('visible-count').textContent = matchingSchools.size;
             document.getElementById('matching-program-count').textContent = matchingPrograms.length;
+            renderActiveFilters();
             renderResults();
+        }
+
+        function renderActiveFilters() {
+            const filters = [
+                ['state-filter', 'State'],
+                ['type-filter', 'Type'],
+                ['location-filter', 'Format'],
+                ['search-filter', 'Search']
+            ].map(([id, label]) => ({ id, label, value: document.getElementById(id).value.trim() }))
+                .filter(filter => filter.value);
+            document.getElementById('mobile-filter-count').textContent = filters.length;
+            document.getElementById('active-filters').innerHTML = filters.length
+                ? `<span class="active-filters-label">Showing results for:</span>${filters.map(filter =>
+                    `<button type="button" class="filter-chip" data-filter-id="${filter.id}" aria-label="Remove ${filter.label}: ${escapeHtml(filter.value)}">${filter.label}: ${escapeHtml(filter.value)} <span aria-hidden="true">×</span></button>`
+                ).join('')}<button type="button" id="clear-active-filters" class="clear-active-filters">Clear all</button>`
+                : '<span class="active-filters-label">Showing all programs</span>';
+        }
+
+        function setFilterPanelOpen(open) {
+            document.getElementById('filter-controls').hidden = !open;
+            document.getElementById('mobile-filter-toggle').setAttribute('aria-expanded', String(open));
+            document.querySelector('.filter-toggle-label').textContent = open ? 'Hide filters' : 'Show filters';
+        }
+
+        let filterPanelMobile;
+        function syncFilterPanel() {
+            const mobile = window.matchMedia('(max-width: 768px)').matches;
+            if (mobile === filterPanelMobile) return;
+            filterPanelMobile = mobile;
+            setFilterPanelOpen(!mobile);
         }
 
         function renderResults() {
@@ -1015,6 +1120,7 @@ Timestamp: ${formData.timestamp}
 
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
+            syncFilterPanel();
             initMap();
             loadData();
             addZoomListener();
@@ -1022,7 +1128,21 @@ Timestamp: ${formData.timestamp}
 
             document.getElementById('results-sort').addEventListener('change', renderResults);
             document.getElementById('search-filter').addEventListener('input', applyFilters);
+            window.addEventListener('resize', syncFilterPanel);
             document.addEventListener('click', event => {
+                const chip = event.target.closest('.filter-chip');
+                if (chip) {
+                    document.getElementById(chip.dataset.filterId).value = '';
+                    applyFilters();
+                    return;
+                }
+                if (event.target.closest('#clear-active-filters')) { clearFilters(); return; }
+                if (event.target.closest('#mobile-filter-toggle')) {
+                    setFilterPanelOpen(document.getElementById('filter-controls').hidden);
+                    return;
+                }
+                if (event.target.closest('#compare-open')) { openComparison(); return; }
+                if (event.target.closest('#compare-close') || event.target.id === 'compareModal') { closeComparison(); return; }
                 const card = event.target.closest('[data-program-key]');
                 if (!card) return;
                 const key = card.dataset.programKey;
@@ -1034,6 +1154,32 @@ Timestamp: ${formData.timestamp}
                     if (!form.hidden) form.querySelector('textarea').focus();
                 } else if (event.target.closest('.result-focus')) {
                     focusProgram(key);
+                }
+            });
+            document.addEventListener('change', event => {
+                if (!event.target.matches('.compare-select')) return;
+                const key = event.target.closest('[data-program-key]').dataset.programKey;
+                if (event.target.checked) {
+                    if (compareSelection.size >= 4) { event.target.checked = false; return; }
+                    compareSelection.add(key);
+                } else {
+                    compareSelection.delete(key);
+                }
+                updateCompareControls();
+            });
+            document.addEventListener('keydown', event => {
+                const modal = document.getElementById('compareModal');
+                if (modal.hidden) return;
+                if (event.key === 'Escape') { closeComparison(); return; }
+                if (event.key !== 'Tab') return;
+                const focusable = [...modal.querySelectorAll('button:not([disabled]), a[href]')];
+                if (!focusable.length) return;
+                if (event.shiftKey && document.activeElement === focusable[0]) {
+                    event.preventDefault();
+                    focusable.at(-1).focus();
+                } else if (!event.shiftKey && document.activeElement === focusable.at(-1)) {
+                    event.preventDefault();
+                    focusable[0].focus();
                 }
             });
             document.addEventListener('submit', event => {

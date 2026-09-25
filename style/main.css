@@ -1322,3 +1322,157 @@ select, input, button {
         font-size: 0.75em;
     }
 }
+
+/* Applied filters and mobile filter panel */
+.mobile-filter-toggle { display: none; }
+#filter-controls[hidden], .compare-modal[hidden] { display: none; }
+.active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin: -8px 0 18px;
+    line-height: 1.4;
+}
+.active-filters-label {
+    width: 100%;
+    font-size: 12px;
+    font-weight: 600;
+    color: #455668;
+}
+.filter-chip {
+    max-width: 100%;
+    padding: 5px 9px;
+    border: 1px solid #7c9ab5;
+    border-radius: 16px;
+    background: #eaf3fa;
+    color: #193d5b;
+    overflow-wrap: anywhere;
+    text-align: left;
+    cursor: pointer;
+    font-size: 12px;
+}
+.filter-chip span { margin-left: 4px; font-size: 15px; font-weight: 700; }
+.clear-active-filters {
+    padding: 5px 3px;
+    border: 0;
+    background: none;
+    color: #205b9c;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+/* Saved program comparison */
+.compare-choice {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    font-size: 12px;
+    cursor: pointer;
+}
+.compare-choice input { width: 16px; height: 16px; }
+.compare-open {
+    width: 100%;
+    padding: 10px;
+    margin: 12px 0 8px;
+    border: 0;
+    border-radius: 6px;
+    background: #34495e;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+}
+.compare-open:disabled { opacity: 0.5; cursor: not-allowed; }
+.compare-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.55);
+}
+.compare-dialog {
+    width: min(1100px, 100%);
+    max-height: 90vh;
+    padding: 20px;
+    border-radius: 10px;
+    background: white;
+    overflow-y: auto;
+}
+.compare-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.compare-header h2 { color: #34495e; font-size: 20px; }
+#compare-close {
+    min-width: 36px;
+    min-height: 36px;
+    border: 0;
+    border-radius: 5px;
+    background: #e5eaf0;
+    font-size: 25px;
+    cursor: pointer;
+}
+.compare-dialog > p { margin: 10px 0; color: #586675; font-size: 13px; }
+.compare-scroll { max-width: 100%; overflow-x: auto; }
+.compare-table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+.compare-table th, .compare-table td {
+    width: 220px;
+    padding: 12px;
+    border: 1px solid #d5dde5;
+    vertical-align: top;
+    text-align: left;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    font-size: 13px;
+}
+.compare-table th:first-child {
+    position: sticky;
+    left: 0;
+    width: 155px;
+    background: #edf3f8;
+    z-index: 1;
+}
+.compare-table thead th { background: #34495e; color: white; }
+.compare-table thead th:first-child { background: #34495e; z-index: 2; }
+
+@media (max-width: 768px) {
+    .filter-section { margin-bottom: 16px; }
+    .mobile-filter-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 10px;
+        border: 1px solid #aab2ba;
+        border-radius: 6px;
+        background: #f4f8fb;
+        color: #20384f;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+    #mobile-filter-count {
+        display: inline-block;
+        min-width: 21px;
+        padding: 2px 5px;
+        border-radius: 11px;
+        background: #34495e;
+        color: white;
+        text-align: center;
+        font-size: 11px;
+    }
+    .filter-toggle-label { color: #205b9c; font-size: 12px; }
+    .active-filters { margin-top: 0; }
+    .compare-modal { padding: 8px; }
+    .compare-dialog { padding: 12px; max-height: 96vh; }
+    .compare-table th, .compare-table td { width: 190px; padding: 9px; }
+    .compare-table th:first-child { width: 100px; }
+}
