@@ -26,11 +26,11 @@ The program total reflects **four additions and six removals**. Two institutions
 
 | School | 2025 program | 2026 finding |
 |---|---|---|
-| [Calvin University](https://calvin.edu/graduate-programs) | MPA Spatial Analysis Concentration | Not listed among current graduate degrees; the GIS MS remains in the inventory. The status of the former MPA concentration has not been separately confirmed by the school. |
+| [Calvin University](https://calvin.edu/graduate-programs) | MPA Spatial Analysis Concentration | Not listed among current graduate degrees; the GIS MS remains in the inventory.  |
 | [Eastern Illinois University](https://www.eiu.edu/assess/archivepr.php) | PSM Geographic Information Science | Listed by the university as closed. |
 | [Indiana University Indianapolis](https://graduate.indianapolis.iu.edu/admissions/programs/index.html) | MS Geographic Information Science | The current graduate program list shows GIS as a certificate, with no GIS master's degree. |
-| [Elmhurst University](https://catalog.elmhurst.edu/) | MS Geographic Information Systems | The user found no Geography program in the 2026–2027 catalog. |
-| Georgia Southern University | Master Applied Geography | The user confirmed that the program is no longer offered. |
+| [Elmhurst University](https://catalog.elmhurst.edu/) | MS Geographic Information Systems | Geography program was not listed in the 2026–2027 catalog. |
+| Georgia Southern University | Master Applied Geography | The program is no longer offered. |
 | [Indiana State University](https://cms.indstate.edu/administration/academic-affairs/accreditation/academic-program-requests-submitted-state-approval) | MA Geography | The university records a March 2025 program suspension. Its Geoscience MS is a different degree and remains in the inventory. |
 
 ## Other changes
@@ -40,4 +40,4 @@ The program total reflects **four additions and six removals**. Two institutions
 | Program URLs updated | 14 | Replaced outdated, redirected, or less direct links with current university pages. |
 | Program titles refined | 6 | Aligned degree names and specialization wording with current university descriptions. |
 
-The existing Utah GIS master's record was renamed **MS Spatial Data Science**. Two campus locations were added for Colorado School of Mines and City College of New York; the former is an online program, so its map point represents the university rather than a classroom location.
+The existing Utah GIS master's record was renamed **MS Spatial Data Science**.
