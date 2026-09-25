@@ -17,7 +17,7 @@ The program total reflects **four additions and six removals**. Two institutions
 
 | School | Program | What changed |
 |---|---|---|
-| [University of Utah](https://ess.utah.edu/graduate/geography-ms.php) | MS Geography | Added as a separate research degree alongside the school's professional MS Spatial Data Science. |
+| [University of Utah](https://ess.utah.edu/graduate/geography-ms.php) | MS Geography | Added as a separate research degree alongside the school's professional MS Spatial Data Science. The existing Utah GIS master's record was renamed **MS Spatial Data Science**.|
 | [Colorado School of Mines](https://www.mines.edu/academics/graduate-academics/gis-and-geoinformatics-msnt/) | MS GIS and Geoinformatics (Non-Thesis) | Added a previously unlisted institution and its online master's program. |
 | [Liberty University](https://catalog.liberty.edu/graduate/colleges-schools/arts-sciences/geographic-information-systems-ms/) | MS Geographic Information Systems | Added one degree alongside the existing Geography MA. Its three tracks are [Cartography & Remote Sensing](https://catalog.liberty.edu/graduate/colleges-schools/arts-sciences/geographic-information-systems-ms/cartography-remote-sensing/), [Commercial Logistics](https://catalog.liberty.edu/graduate/colleges-schools/arts-sciences/geographic-information-systems-ms/commercial-logistics/), and [Geospatial Intelligence](https://catalog.liberty.edu/graduate/colleges-schools/arts-sciences/geographic-information-systems-ms/geospatial-intelligence/). |
 | [The City College of New York](https://www.ccny.cuny.edu/sustainability/joint-unu-ccny-ms) | MS Sustainability in the Urban Environment, joint UNU–CCNY pathway with a Geospatial Data Sciences focus | Added a previously unlisted institution. The school announced this joint pathway for Fall 2026. |
@@ -39,5 +39,3 @@ The program total reflects **four additions and six removals**. Two institutions
 |---|---:|---|
 | Program URLs updated | 14 | Replaced outdated, redirected, or less direct links with current university pages. |
 | Program titles refined | 6 | Aligned degree names and specialization wording with current university descriptions. |
-
-The existing Utah GIS master's record was renamed **MS Spatial Data Science**.
