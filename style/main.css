@@ -1476,3 +1476,219 @@ select, input, button {
     .compare-table th, .compare-table td { width: 190px; padding: 9px; }
     .compare-table th:first-child { width: 100px; }
 }
+
+/* Floating saved shortlist */
+@media (min-width: 769px) {
+    body { display: flex; flex-direction: column; height: 100dvh; overflow: hidden; }
+    .header { flex: none; }
+    .container { flex: 1; height: auto; min-height: 0; }
+    .map-container, #map { min-height: 0; }
+}
+.saved-launcher {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    z-index: 1005;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 46px;
+    padding: 9px 12px 9px 15px;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 12px;
+    background: #233e54;
+    color: white;
+    box-shadow: 0 7px 24px rgba(15, 35, 55, 0.25);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.saved-launcher:hover, .saved-launcher[aria-expanded="true"] { background: #315774; }
+.saved-launcher i { color: #f6d789; }
+.saved-launcher-count {
+    display: inline-grid;
+    place-items: center;
+    min-width: 25px;
+    height: 25px;
+    padding: 0 6px;
+    border-radius: 50px;
+    background: #f6d789;
+    color: #20384f;
+    font-size: 12px;
+}
+.saved-drawer[hidden], .saved-backdrop[hidden] { display: none; }
+.saved-backdrop { display: none; }
+.saved-drawer {
+    position: absolute;
+    left: 20px;
+    bottom: 78px;
+    z-index: 1006;
+    display: flex;
+    flex-direction: column;
+    width: min(390px, calc(100% - 40px));
+    max-height: min(650px, calc(100% - 98px));
+    border: 1px solid #d8e3eb;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 16px 44px rgba(18, 41, 59, 0.26);
+    overflow: hidden;
+}
+.saved-drawer-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    flex: none;
+    padding: 16px 18px 13px;
+    border-bottom: 1px solid #294c63;
+    background: linear-gradient(120deg, #203c52, #315f77);
+}
+.saved-drawer-header h3 {
+    margin: 0;
+    color: white;
+    font-size: 17px;
+    line-height: 1.2;
+}
+.saved-drawer-header p {
+    margin: 4px 0 0;
+    color: #d9e7ef;
+    font-size: 11px;
+}
+.saved-close {
+    width: 30px;
+    height: 30px;
+    border: 0;
+    border-radius: 7px;
+    background: rgba(255,255,255,.15);
+    color: white;
+    font-size: 23px;
+    line-height: 1;
+    cursor: pointer;
+}
+.saved-list { min-height: 0; padding: 12px 14px; overflow-y: auto; }
+.saved-school + .saved-school { margin-top: 14px; }
+.saved-school h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    margin: 0 2px 8px;
+    color: #596f82;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .02em;
+}
+.saved-school-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.saved-school-count {
+    flex: none;
+    min-width: 18px;
+    padding: 2px 5px;
+    border-radius: 10px;
+    background: #e8eef3;
+    text-align: center;
+    font-size: 10px;
+}
+.saved-drawer .saved-card {
+    margin: 0 0 8px;
+    padding: 10px 10px 9px;
+    border: 1px solid #dce5ec;
+    border-left: 3px solid #5e91ae;
+    border-radius: 9px;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(26, 58, 81, .04);
+}
+.saved-program-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.saved-drawer .saved-program-link {
+    display: -webkit-box;
+    min-width: 0;
+    overflow: hidden;
+    color: #1c4e70;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.35;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+.saved-program-link:hover { text-decoration: underline; }
+.saved-program-link i { margin-left: 5px; font-size: 10px; }
+.saved-drawer .saved-card-actions { flex: none; display: flex; gap: 3px; margin: 0; }
+.saved-drawer .saved-card-actions button {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: 5px;
+    background: transparent;
+    color: #657d90;
+    font-size: 13px;
+}
+.saved-drawer .saved-card-actions button:hover { background: #e9f1f6; color: #1c4e70; }
+.saved-drawer .compare-choice {
+    margin: 8px 0 0;
+    padding: 5px 8px;
+    border: 1px solid #d7e1e9;
+    border-radius: 50px;
+    color: #456075;
+    font-size: 11px;
+    line-height: 1;
+}
+.saved-drawer .compare-choice:has(input:checked) { border-color: #4b7d9f; background: #eaf4fa; color: #1c4e70; }
+.saved-drawer .compare-choice input { width: 15px; height: 15px; margin: 0; accent-color: #315f80; }
+.saved-drawer .saved-note-preview {
+    display: -webkit-box;
+    margin-top: 7px;
+    overflow: hidden;
+    color: #6a7884;
+    font-size: 11px;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+}
+.saved-drawer .note-form { margin-top: 9px; }
+.saved-drawer-footer {
+    flex: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 11px 14px 14px;
+    border-top: 1px solid #e3eaf0;
+    background: #f6f9fb;
+}
+.saved-drawer-footer p { grid-column: 1 / -1; margin: 0; color: #65798a; font-size: 11px; }
+.saved-drawer .compare-open, .saved-drawer .export-btn {
+    width: 100%;
+    min-height: 34px;
+    margin: 0;
+    padding: 6px 7px;
+    border-radius: 7px;
+    font-size: 11px;
+    font-weight: 700;
+}
+.saved-drawer .export-btn { background: white; border: 1px solid #c5d4df; color: #2a506d; }
+.saved-drawer .export-btn:hover { background: #e8f1f7; }
+.saved-drawer .export-btn i { margin-right: 4px; }
+.saved-empty { padding: 30px 12px; text-align: center; color: #617588; }
+.saved-empty i { display: block; margin-bottom: 12px; color: #7ea5bd; font-size: 26px; }
+.saved-empty strong { display: block; color: #27445b; font-size: 14px; }
+.saved-empty p { margin: 5px 0 0; font-size: 12px; }
+
+@media (max-width: 768px) {
+    .saved-launcher { position: fixed; left: 12px; bottom: 12px; z-index: 1400; }
+    .saved-backdrop:not([hidden]) {
+        position: fixed;
+        inset: 0;
+        z-index: 1490;
+        display: block;
+        background: rgba(17, 35, 49, .45);
+    }
+    .saved-drawer {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1500;
+        width: 100%;
+        max-height: 78vh;
+        border-radius: 16px 16px 0 0;
+    }
+}

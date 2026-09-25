@@ -165,15 +165,6 @@
 
             <div id="active-filters" class="active-filters" aria-label="Applied filters"></div>
 
-            <details class="saved-panel" id="saved-panel">
-                <summary>Saved Programs <span id="saved-count">0</span></summary>
-                <p class="saved-help">Saved in this browser. Download a CSV to keep a copy.</p>
-                <p class="saved-help" id="compare-help">Select 2–4 saved programs to compare.</p>
-                <div id="saved-list"></div>
-                <button class="compare-open" id="compare-open" type="button" disabled>Compare selected (0)</button>
-                <button class="export-btn" id="saved-export" type="button" onclick="exportToCSV()">Download Saved Programs</button>
-            </details>
-
             <section class="results-section" aria-labelledby="results-heading">
                 <div class="results-heading-row">
                     <h3 id="results-heading">Matching Programs</h3>
@@ -189,6 +180,28 @@
 
         <div class="map-container">
             <div id="map"></div>
+
+            <button type="button" id="saved-launcher" class="saved-launcher" aria-controls="saved-panel" aria-expanded="false">
+                <i class="fas fa-bookmark" aria-hidden="true"></i>
+                <span>Saved programs</span>
+                <span id="saved-count" class="saved-launcher-count">0</span>
+            </button>
+            <div id="saved-backdrop" class="saved-backdrop" hidden></div>
+            <section id="saved-panel" class="saved-drawer" aria-labelledby="saved-panel-title" hidden>
+                <div class="saved-drawer-header">
+                    <div>
+                        <h3 id="saved-panel-title">Your saved programs</h3>
+                        <p>Stored in this browser</p>
+                    </div>
+                    <button type="button" id="saved-close" class="saved-close" aria-label="Close saved programs">×</button>
+                </div>
+                <div id="saved-list" class="saved-list"></div>
+                <div class="saved-drawer-footer">
+                    <p id="compare-help">Select 2–4 programs to compare.</p>
+                    <button class="compare-open" id="compare-open" type="button" disabled>Compare selected (0)</button>
+                    <button class="export-btn" id="saved-export" type="button" onclick="exportToCSV()"><i class="fas fa-download" aria-hidden="true"></i> Download CSV</button>
+                </div>
+            </section>
             
             <!-- Suggest Edit Box -->
             <div class="suggest-edit-box" onclick="showSuggestEditModal()">
@@ -645,6 +658,17 @@
             showStatus.timeout = setTimeout(() => status.classList.remove('visible'), 3000);
         }
 
+        function setSavedPanelOpen(open) {
+            document.getElementById('saved-panel').hidden = !open;
+            document.getElementById('saved-backdrop').hidden = !open;
+            document.getElementById('saved-launcher').setAttribute('aria-expanded', String(open));
+            if (open) {
+                document.getElementById('saved-close').focus();
+            } else {
+                document.getElementById('saved-launcher').focus();
+            }
+        }
+
         function toggleSaved(key) {
             const index = savedPrograms.findIndex(item => item.programId === key);
             if (index >= 0) {
@@ -690,28 +714,41 @@
             document.getElementById('saved-export').disabled = savedPrograms.length === 0;
             updateCompareControls();
             const list = document.getElementById('saved-list');
+            const scrollTop = list.scrollTop;
             if (!savedPrograms.length) {
-                list.innerHTML = '<p class="empty-state">No saved programs yet. Use Save on a program to start a shortlist.</p>';
+                list.innerHTML = '<div class="saved-empty"><i class="far fa-bookmark" aria-hidden="true"></i><strong>Start your shortlist</strong><p>Use Save on any program to add it here.</p></div>';
                 return;
             }
-            list.innerHTML = savedPrograms.map(program => {
-                const key = escapeHtml(program.programId);
-                const link = /^https?:\/\//i.test(program.link) ? program.link : '#';
-                return `<article class="saved-card" data-program-key="${key}">
-                    <strong>${escapeHtml(program.Institution)}</strong>
-                    <a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(program.Program)}</a>
-                    <label class="compare-choice"><input type="checkbox" class="compare-select" ${compareSelection.has(program.programId) ? 'checked' : ''} ${compareSelection.size >= 4 && !compareSelection.has(program.programId) ? 'disabled' : ''} aria-label="Compare ${escapeHtml(program.Institution)}: ${escapeHtml(program.Program)}"> Compare</label>
-                    <div class="saved-card-actions">
-                        <button type="button" class="note-toggle">${program.note ? 'Edit note' : 'Add note'}</button>
-                        <button type="button" class="saved-remove">Remove</button>
-                    </div>
-                    <form class="note-form" hidden>
-                        <label>Personal note<textarea maxlength="2000">${escapeHtml(program.note || '')}</textarea></label>
-                        <button type="submit">Save note</button>
-                    </form>
-                    ${program.note ? `<p class="saved-note-preview">${escapeHtml(program.note)}</p>` : ''}
-                </article>`;
-            }).join('');
+            const schools = new Map();
+            savedPrograms.forEach(program => {
+                if (!schools.has(program.Institution)) schools.set(program.Institution, []);
+                schools.get(program.Institution).push(program);
+            });
+            list.innerHTML = [...schools].map(([school, programs]) => `
+                <section class="saved-school">
+                    <h4 title="${escapeHtml(school)}"><span class="saved-school-name">${escapeHtml(school)}</span>${programs.length > 1 ? `<span class="saved-school-count">${programs.length}</span>` : ''}</h4>
+                    ${programs.map(program => {
+                        const key = escapeHtml(program.programId);
+                        const link = /^https?:\/\//i.test(program.link) ? program.link : '#';
+                        const name = escapeHtml(program.Program);
+                        return `<article class="saved-card" data-program-key="${key}">
+                            <div class="saved-program-head">
+                                <a class="saved-program-link" href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer" title="${name}">${name}<i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                                <div class="saved-card-actions">
+                                    <button type="button" class="note-toggle" aria-label="${program.note ? 'Edit' : 'Add'} note for ${name}" title="${program.note ? 'Edit' : 'Add'} note"><i class="far fa-pen-to-square" aria-hidden="true"></i></button>
+                                    <button type="button" class="saved-remove" aria-label="Remove ${name}" title="Remove"><i class="far fa-trash-can" aria-hidden="true"></i></button>
+                                </div>
+                            </div>
+                            <label class="compare-choice"><input type="checkbox" class="compare-select" ${compareSelection.has(program.programId) ? 'checked' : ''} ${compareSelection.size >= 4 && !compareSelection.has(program.programId) ? 'disabled' : ''} aria-label="Compare ${escapeHtml(school)}: ${name}"><span>Compare</span></label>
+                            <form class="note-form" hidden>
+                                <label>Personal note<textarea maxlength="2000">${escapeHtml(program.note || '')}</textarea></label>
+                                <button type="submit">Save note</button>
+                            </form>
+                            ${program.note ? `<p class="saved-note-preview"><i class="far fa-note-sticky" aria-hidden="true"></i> ${escapeHtml(program.note)}</p>` : ''}
+                        </article>`;
+                    }).join('')}
+                </section>`).join('');
+            list.scrollTop = scrollTop;
         }
 
         function updateCompareControls() {
@@ -720,8 +757,8 @@
             button.textContent = `Compare selected (${count})`;
             button.disabled = count < 2 || count > 4;
             document.getElementById('compare-help').textContent = count >= 4
-                ? 'Four selected. Deselect one to choose another.'
-                : `Select 2–4 saved programs to compare. ${count} selected.`;
+                ? 'Four selected · Deselect one to change'
+                : `${count} selected · Choose 2–4 to compare`;
             document.querySelectorAll('.compare-select').forEach(input => {
                 input.disabled = count >= 4 && !input.checked;
             });
@@ -1141,6 +1178,14 @@ Timestamp: ${formData.timestamp}
                     setFilterPanelOpen(document.getElementById('filter-controls').hidden);
                     return;
                 }
+                if (event.target.closest('#saved-launcher')) {
+                    setSavedPanelOpen(document.getElementById('saved-panel').hidden);
+                    return;
+                }
+                if (event.target.closest('#saved-close') || event.target.id === 'saved-backdrop') {
+                    setSavedPanelOpen(false);
+                    return;
+                }
                 if (event.target.closest('#compare-open')) { openComparison(); return; }
                 if (event.target.closest('#compare-close') || event.target.id === 'compareModal') { closeComparison(); return; }
                 const card = event.target.closest('[data-program-key]');
@@ -1169,7 +1214,10 @@ Timestamp: ${formData.timestamp}
             });
             document.addEventListener('keydown', event => {
                 const modal = document.getElementById('compareModal');
-                if (modal.hidden) return;
+                if (modal.hidden) {
+                    if (event.key === 'Escape' && !document.getElementById('saved-panel').hidden) setSavedPanelOpen(false);
+                    return;
+                }
                 if (event.key === 'Escape') { closeComparison(); return; }
                 if (event.key !== 'Tab') return;
                 const focusable = [...modal.querySelectorAll('button:not([disabled]), a[href]')];
