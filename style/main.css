@@ -249,6 +249,20 @@ body {
     margin-bottom: 3px;
 }
 
+.program-tracks {
+    margin-top: 8px;
+    font-size: 0.9em;
+}
+
+.program-tracks ul {
+    margin: 4px 0 0 18px;
+    padding: 0;
+}
+
+.program-tracks a {
+    color: #007bff;
+}
+
 /* Custom marker styles */
 .custom-marker {
     background: transparent !important;

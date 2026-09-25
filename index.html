@@ -18,9 +18,9 @@
 <body>
     <div class="header">
         <h1>GIS Master's Programs in the US</h1>
-        <h2>Explore 176 GIS master's programs across 142 institutions in the U.S.</h2>
+        <h2 id="inventory-subtitle">Explore 174 GIS master's programs across 140 institutions in the U.S.</h2>
         <p class="author-info">
-            Yanbing Chen, Latest Update by June 2026
+            Yanbing Chen, Data updated September 2026
             <i class="fas fa-info-circle info-icon" onclick="showInfoPopup()" onmouseover="showInfoTooltip()" onmouseout="hideInfoTooltip()"></i>
         </p>
     </div>
@@ -51,6 +51,7 @@
 
                 <p><strong>Data Sources:</strong></p>
                 <p>• Program information manually collected from university websites<br>
+                <p><strong>2026 update:</strong> <a href="https://github.com/esstherc/GIS-master-webmap/blob/main/change%20records/2026_change_summary.md" target="_blank" rel="noopener noreferrer">Read the annual inventory change summary</a>.</p>
                 
                 <p><strong>Features:</strong></p>
                 <p>• Interactive filtering by state, program type, and format<br>
@@ -229,6 +230,7 @@
         let markers = [];
         let allData = [];
         let institutionData = new Map();
+        let programTracks = new Map();
 
         // Low-zoom pixel offset only for Georgia Tech + Georgia State (Atlanta pair)
         const ATLANTA_OFFSET_PAIR = [
@@ -323,7 +325,7 @@
                 
                 // Load program data
                 console.log('Loading program data...');
-                const programResponse = await fetch('data/all_msgis_institutions.csv');
+                const programResponse = await fetch('data/all_msgis_institutions_2026.csv');
                 
                 if (!programResponse.ok) {
                     throw new Error(`Failed to load program data: ${programResponse.status} ${programResponse.statusText}`);
@@ -336,7 +338,7 @@
 
                 // Load coordinates data 
                 console.log('Loading coordinates data...');
-                const coordResponse = await fetch('data/universities_coordinates_all.csv');
+                const coordResponse = await fetch('data/universities_coordinates_2026.csv');
                 
                 if (!coordResponse.ok) {
                     throw new Error(`Failed to load coordinates data: ${coordResponse.status} ${coordResponse.statusText}`);
@@ -346,6 +348,19 @@
                 console.log('Coordinates data loaded, parsing...');
                 const coordData = Papa.parse(coordText, { header: true }).data;
                 console.log('Coordinates data parsed:', coordData.length, 'records');
+
+                const trackResponse = await fetch('data/program_tracks_2026.csv');
+                if (!trackResponse.ok) {
+                    throw new Error(`Failed to load program tracks: ${trackResponse.status} ${trackResponse.statusText}`);
+                }
+                const trackText = await trackResponse.text();
+                const trackData = Papa.parse(trackText, { header: true, skipEmptyLines: true }).data;
+                programTracks = new Map();
+                trackData.forEach(track => {
+                    const key = `${track.Institution}\u001f${track.Program}`;
+                    if (!programTracks.has(key)) programTracks.set(key, []);
+                    programTracks.get(key).push(track);
+                });
 
                 // Merge data
                 console.log('Merging data...');
@@ -506,6 +521,12 @@
         }
 
         // Create popup content
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>"']/g, character => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            })[character]);
+        }
+
         function createPopupContent(data) {
             let content = `
                 <div class="popup-content">
@@ -520,6 +541,15 @@
                 const link = program.link && program.link !== 'N/A' ? program.link : '#';
                 const typeColor = colorMap[program.type] || colorMap.default;
                 const programId = `${data.institution}_${index}`;
+                const tracksHtml = program.tracks.length ? `
+                    <div class="program-tracks">
+                        <strong>Tracks:</strong>
+                        <ul>${program.tracks.map(track => {
+                            const trackUrl = /^https:\/\//i.test(track.link) ? track.link : '#';
+                            return `<li><a href="${escapeHtml(trackUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(track.Track)}</a></li>`;
+                        }).join('')}</ul>
+                    </div>
+                ` : '';
                 
                 content += `
                     <div class="program-item" style="border-left-color: ${typeColor};">
@@ -533,6 +563,7 @@
                             <span><strong>Duration:</strong> ${program.duration || 'N/A'}</span>
                             <span><strong>Graduation:</strong> ${program.graduation || 'N/A'}</span>
                         </div>
+                        ${tracksHtml}
                         <div class="user-notes" data-program-id="${programId}">
                             <div class="note-buttons">
                                 <button class="note-btn wishlist-btn" onclick="addToWishlist('${programId}')">
@@ -715,7 +746,8 @@
                     graduation: program['graduation requirement'],
                     duration: program.duration,
                     location: program.location,
-                    institutionType: program['institution type']
+                    institutionType: program['institution type'],
+                    tracks: programTracks.get(`${program.Institution}\u001f${program.Program}`) || []
                 });
             });
         }
@@ -809,6 +841,8 @@
             document.getElementById('total-institutions').textContent = institutionData.size;
             document.getElementById('total-programs').textContent = allData.length;
             document.getElementById('visible-count').textContent = markers.length;
+            document.getElementById('inventory-subtitle').textContent =
+                `Explore ${allData.length} GIS master's programs across ${institutionData.size} institutions in the U.S.`;
         }
 
         function addZoomListener() {
