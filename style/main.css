@@ -18,8 +18,8 @@ body {
     text-align: center;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     position: relative;
-    width: calc(100% - 300px);
-    margin-left: 300px;
+    width: calc(100% - 270px);
+    margin-left: 270px;
     box-sizing: border-box;
 }
 
@@ -52,14 +52,14 @@ body {
 .container {
     display: flex;
     height: calc(100vh - 120px);
-    width: calc(100% - 300px);
-    margin-left: 300px;
+    width: calc(100% - 270px);
+    margin-left: 270px;
 }
 
 .sidebar {
-    width: 300px;
+    width: 270px;
     background: white;
-    padding: 20px;
+    padding: 16px;
     box-shadow: 2px 0 10px rgba(0,0,0,0.1);
     overflow-y: auto;
     position: fixed;
@@ -83,34 +83,35 @@ body {
 }
 
 .filter-section {
-    margin-bottom: 25px;
+    margin-bottom: 18px;
 }
 
 .filter-section h3 {
     color: #333;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     font-size: 1.1em;
     border-bottom: 2px solid #34495e;
     padding-bottom: 5px;
 }
 
 .filter-group {
-    margin-bottom: 15px;
+    margin-bottom: 11px;
 }
 
 .filter-group label {
     display: block;
     font-weight: 600;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
     color: #555;
+    font-size: 13px;
 }
 
 .filter-group select, .filter-group input {
     width: 100%;
-    padding: 8px 12px;
-    border: 2px solid #ddd;
+    padding: 7px 9px;
+    border: 1px solid #cbd2d9;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 13px;
     transition: border-color 0.3s;
 }
 
@@ -148,6 +149,21 @@ body {
 
 .btn-secondary:hover {
     background: #5a6268;
+}
+
+.filter-section .button-row {
+    display: flex;
+    gap: 8px;
+}
+
+.filter-section .button-row .btn {
+    flex: 1;
+    min-width: 0;
+    width: auto;
+    margin-bottom: 0;
+    padding: 9px 5px;
+    font-size: 12px;
+    white-space: nowrap;
 }
 
 .stats {
@@ -757,15 +773,18 @@ select, input, button {
 }
 
 .results-heading-row h3 {
-    font-size: 15px;
+    font-size: 14px;
     color: #34495e;
+    white-space: nowrap;
 }
 
 .results-heading-row select {
-    max-width: 120px;
+    max-width: 112px;
+    min-width: 0;
     padding: 5px;
     border: 1px solid #aab2ba;
     border-radius: 4px;
+    font-size: 12px;
 }
 
 .results-list {
@@ -1526,7 +1545,7 @@ select, input, button {
     z-index: 1006;
     display: flex;
     flex-direction: column;
-    width: min(390px, calc(100% - 40px));
+    width: min(360px, calc(100% - 40px));
     max-height: min(650px, calc(100% - 98px));
     border: 1px solid #d8e0e6;
     border-radius: 14px;
@@ -1542,7 +1561,7 @@ select, input, button {
     justify-content: space-between;
     gap: 10px;
     flex: none;
-    padding: 14px 18px;
+    padding: 10px 14px;
     border-bottom: 1px solid #e1e6ea;
     background: #fff;
 }
@@ -1565,14 +1584,14 @@ select, input, button {
     cursor: pointer;
 }
 .saved-close:hover { background: #f0f3f5; }
-.saved-list { min-height: 0; padding: 16px; overflow-y: auto; }
-.saved-school + .saved-school { margin-top: 18px; }
+.saved-list { min-height: 0; padding: 12px; overflow-y: auto; }
+.saved-school + .saved-school { margin-top: 13px; }
 .saved-school h4 {
     display: flex;
     align-items: center;
     gap: 8px;
     min-width: 0;
-    margin: 0 2px 9px;
+    margin: 0 2px 7px;
     color: #526575;
     font-size: 13px;
     font-weight: 700;
@@ -1589,8 +1608,8 @@ select, input, button {
     font-size: 10px;
 }
 .saved-drawer .saved-card {
-    margin: 0 0 8px;
-    padding: 13px 14px 10px;
+    margin: 0 0 7px;
+    padding: 10px 11px 7px;
     border: 1px solid #dce3e8;
     border-radius: 12px;
     background: #fff;
@@ -1613,14 +1632,14 @@ select, input, button {
 .saved-drawer .saved-program-link span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .saved-drawer .saved-program-link:hover span { text-decoration: underline; }
 .saved-drawer .saved-program-link i { flex: none; font-size: 11px; }
-.saved-drawer .saved-card-actions { display: flex; align-items: center; gap: 3px; margin: 9px 0 0; }
+.saved-drawer .saved-card-actions { display: flex; align-items: center; gap: 2px; margin: 6px 0 0; }
 .saved-drawer .saved-card-actions button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    min-height: 38px;
-    padding: 0 10px;
+    min-height: 36px;
+    padding: 0 8px;
     border: 0;
     border-radius: 20px;
     background: transparent;
@@ -1636,9 +1655,9 @@ select, input, button {
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    min-height: 38px;
+    min-height: 36px;
     margin: 0;
-    padding: 0 10px;
+    padding: 0 8px;
     border: 1px solid transparent;
     border-radius: 20px;
     color: #526575;
@@ -1654,20 +1673,20 @@ select, input, button {
 .saved-drawer :is(a, button, .compare-choice):focus-visible { outline: 2px solid #34495e; outline-offset: 2px; }
 .saved-drawer .saved-note-preview {
     display: -webkit-box;
-    margin-top: 8px;
+    margin-top: 5px;
     overflow: hidden;
     color: #6a7884;
     font-size: 12px;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
 }
-.saved-drawer .note-form { margin-top: 10px; }
+.saved-drawer .note-form { margin-top: 7px; }
 .saved-drawer-footer {
     flex: none;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
-    padding: 12px 16px 16px;
+    padding: 10px 12px 12px;
     border-top: 1px solid #e3eaf0;
     background: #fff;
 }
