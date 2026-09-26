@@ -253,8 +253,8 @@ body {
     background: #f8f9fa;
     margin: 10px 0;
     padding: 12px;
-    border-radius: 6px;
-    border-left: 4px solid #34495e;
+    border: 1px solid #e2e6ea;
+    border-radius: 4px;
 }
 
 .program-title {
@@ -281,6 +281,23 @@ body {
     margin-right: 15px;
     margin-bottom: 3px;
 }
+
+.program-details .program-type-badge {
+    margin-right: 8px;
+    padding: 2px 7px;
+    border: 1px solid;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.3;
+    text-transform: capitalize;
+    vertical-align: baseline;
+}
+
+.program-details .program-type-professional { background: #eaf6fc; border-color: #9ccfe9; color: #225776; }
+.program-details .program-type-research { background: #fcf9df; border-color: #d8cc80; color: #645814; }
+.program-details .program-type-mixed { background: #fff0e7; border-color: #e6b99f; color: #943d12; }
+.program-details .program-type-default { background: #edf1f4; border-color: #cbd5dd; color: #455668; }
 
 .program-tracks {
     margin-top: 8px;
