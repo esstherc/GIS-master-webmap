@@ -1572,8 +1572,8 @@ select, input, button {
 .saved-drawer-header h3 {
     margin: 0;
     color: #263746;
-    font-size: 17px;
-    font-weight: 700;
+    font-size: 15px;
+    font-weight: 600;
     line-height: 1.2;
 }
 .saved-close {
@@ -1597,8 +1597,8 @@ select, input, button {
     min-width: 0;
     margin: 0 2px 7px;
     color: #526575;
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 12px;
+    font-weight: 600;
     letter-spacing: 0;
 }
 .saved-school-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -1628,8 +1628,8 @@ select, input, button {
     margin: 0;
     color: #263f53;
     text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 500;
     line-height: 1.4;
     white-space: nowrap;
 }
@@ -1648,8 +1648,8 @@ select, input, button {
     border-radius: 20px;
     background: transparent;
     color: #526575;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 500;
     white-space: nowrap;
 }
 .saved-drawer .saved-card-actions button:hover { background: #edf1f4; color: #263f53; }
@@ -1665,8 +1665,8 @@ select, input, button {
     border: 1px solid transparent;
     border-radius: 20px;
     color: #526575;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 500;
     line-height: 1.2;
     cursor: pointer;
 }
@@ -1702,14 +1702,14 @@ select, input, button {
     padding: 6px 7px;
     border-radius: 7px;
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 600;
 }
 .saved-drawer .export-btn { background: white; border: 1px solid #c5d4df; color: #2a506d; }
 .saved-drawer .export-btn:hover { background: #e8f1f7; }
 .saved-drawer .export-btn i { margin-right: 4px; }
 .saved-empty { padding: 30px 12px; text-align: center; color: #617588; }
 .saved-empty i { display: block; margin-bottom: 12px; color: #7ea5bd; font-size: 26px; }
-.saved-empty strong { display: block; color: #27445b; font-size: 14px; }
+.saved-empty strong { display: block; color: #27445b; font-size: 13px; font-weight: 600; }
 .saved-empty p { margin: 5px 0 0; font-size: 12px; }
 
 @media (max-width: 768px) {
