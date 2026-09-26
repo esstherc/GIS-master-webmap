@@ -731,14 +731,12 @@
                         const link = /^https?:\/\//i.test(program.link) ? program.link : '#';
                         const name = escapeHtml(program.Program);
                         return `<article class="saved-card" data-program-key="${key}">
-                            <div class="saved-program-head">
-                                <a class="saved-program-link" href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer" title="${name}">${name}<i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
-                                <div class="saved-card-actions">
-                                    <button type="button" class="note-toggle" aria-label="${program.note ? 'Edit' : 'Add'} note for ${name}" title="${program.note ? 'Edit' : 'Add'} note"><i class="far fa-pen-to-square" aria-hidden="true"></i></button>
-                                    <button type="button" class="saved-remove" aria-label="Remove ${name}" title="Remove"><i class="far fa-trash-can" aria-hidden="true"></i></button>
-                                </div>
+                            <a class="saved-program-link" href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer" title="${name}"><span>${name}</span><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                            <div class="saved-card-actions">
+                                <label class="compare-choice"><input type="checkbox" class="compare-select" ${compareSelection.has(program.programId) ? 'checked' : ''} ${compareSelection.size >= 4 && !compareSelection.has(program.programId) ? 'disabled' : ''} aria-label="Compare ${escapeHtml(school)}: ${name}"><span>Compare</span></label>
+                                <button type="button" class="note-toggle" aria-label="${program.note ? 'View or edit' : 'Add'} note for ${name}" aria-expanded="false"><i class="${program.note ? 'fas' : 'far'} fa-note-sticky" aria-hidden="true"></i><span>Note</span></button>
+                                <button type="button" class="saved-remove" aria-label="Remove ${name} from saved programs"><i class="far fa-trash-can" aria-hidden="true"></i><span>Remove</span></button>
                             </div>
-                            <label class="compare-choice"><input type="checkbox" class="compare-select" ${compareSelection.has(program.programId) ? 'checked' : ''} ${compareSelection.size >= 4 && !compareSelection.has(program.programId) ? 'disabled' : ''} aria-label="Compare ${escapeHtml(school)}: ${name}"><span>Compare</span></label>
                             <form class="note-form" hidden>
                                 <label>Personal note<textarea maxlength="2000">${escapeHtml(program.note || '')}</textarea></label>
                                 <button type="submit">Save note</button>
@@ -1195,6 +1193,7 @@ Timestamp: ${formData.timestamp}
                 } else if (event.target.closest('.note-toggle')) {
                     const form = card.querySelector('.note-form');
                     form.hidden = !form.hidden;
+                    event.target.closest('.note-toggle').setAttribute('aria-expanded', String(!form.hidden));
                     if (!form.hidden) form.querySelector('textarea').focus();
                 } else if (event.target.closest('.result-focus')) {
                     focusProgram(key);
