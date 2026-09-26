@@ -558,9 +558,7 @@
             let content = `
                 <div class="popup-content">
                     <div class="popup-header">${escapeHtml(data.institution)}</div>
-                    <p><strong>State:</strong> ${escapeHtml(data.state || 'N/A')}</p>
-                    <p><strong>City:</strong> ${escapeHtml(data.city || 'N/A')}</p>
-                    <p><strong>Matching Programs:</strong> ${displayedPrograms.length} of ${data.programs.length}</p>
+                    <p class="popup-summary"><span class="popup-location" title="${escapeHtml(data.city || 'N/A')}, ${escapeHtml(data.state || 'N/A')}">${escapeHtml(data.city || 'N/A')}, ${escapeHtml(data.state || 'N/A')}</span><span class="popup-match-count">, ${displayedPrograms.length} of ${data.programs.length} Matching Programs</span></p>
                     <hr style="margin: 10px 0;">
             `;
 

@@ -232,6 +232,23 @@ body {
     z-index: 10;
 }
 
+.popup-summary {
+    display: flex;
+    max-width: 100%;
+    margin: 0;
+    color: #526575;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.popup-location {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.popup-match-count { flex: none; }
+
 .program-item {
     background: #f8f9fa;
     margin: 10px 0;
