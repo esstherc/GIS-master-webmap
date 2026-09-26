@@ -1494,17 +1494,17 @@ select, input, button {
     gap: 10px;
     min-height: 46px;
     padding: 9px 12px 9px 15px;
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 12px;
-    background: #233e54;
+    border: 1px solid #34495e;
+    border-radius: 6px;
+    background: #34495e;
     color: white;
-    box-shadow: 0 7px 24px rgba(15, 35, 55, 0.25);
+    box-shadow: 0 2px 8px rgba(15, 35, 55, 0.18);
     font-size: 13px;
     font-weight: 700;
     cursor: pointer;
 }
-.saved-launcher:hover, .saved-launcher[aria-expanded="true"] { background: #315774; }
-.saved-launcher i { color: #f6d789; }
+.saved-launcher:hover, .saved-launcher[aria-expanded="true"] { background: #2c3e50; }
+.saved-launcher i { color: white; }
 .saved-launcher-count {
     display: inline-grid;
     place-items: center;
@@ -1512,8 +1512,8 @@ select, input, button {
     height: 25px;
     padding: 0 6px;
     border-radius: 50px;
-    background: #f6d789;
-    color: #20384f;
+    background: rgba(255,255,255,.18);
+    color: white;
     font-size: 12px;
 }
 .saved-drawer[hidden], .saved-backdrop[hidden] { display: none; }
@@ -1528,9 +1528,9 @@ select, input, button {
     width: min(390px, calc(100% - 40px));
     max-height: min(650px, calc(100% - 98px));
     border: 1px solid #d8e3eb;
-    border-radius: 14px;
+    border-radius: 8px;
     background: #fff;
-    box-shadow: 0 16px 44px rgba(18, 41, 59, 0.26);
+    box-shadow: 0 8px 24px rgba(18, 41, 59, 0.20);
     overflow: hidden;
 }
 .saved-drawer-header {
@@ -1540,31 +1540,27 @@ select, input, button {
     gap: 10px;
     flex: none;
     padding: 16px 18px 13px;
-    border-bottom: 1px solid #294c63;
-    background: linear-gradient(120deg, #203c52, #315f77);
+    border-bottom: 1px solid #e1e6ea;
+    background: #fff;
 }
 .saved-drawer-header h3 {
     margin: 0;
-    color: white;
+    color: #263746;
     font-size: 17px;
     line-height: 1.2;
-}
-.saved-drawer-header p {
-    margin: 4px 0 0;
-    color: #d9e7ef;
-    font-size: 11px;
 }
 .saved-close {
     width: 30px;
     height: 30px;
     border: 0;
     border-radius: 7px;
-    background: rgba(255,255,255,.15);
-    color: white;
+    background: transparent;
+    color: #516170;
     font-size: 23px;
     line-height: 1;
     cursor: pointer;
 }
+.saved-close:hover { background: #f0f3f5; }
 .saved-list { min-height: 0; padding: 12px 14px; overflow-y: auto; }
 .saved-school + .saved-school { margin-top: 14px; }
 .saved-school h4 {
@@ -1592,10 +1588,9 @@ select, input, button {
     margin: 0 0 8px;
     padding: 10px 10px 9px;
     border: 1px solid #dce5ec;
-    border-left: 3px solid #5e91ae;
-    border-radius: 9px;
+    border-radius: 6px;
     background: #fff;
-    box-shadow: 0 2px 5px rgba(26, 58, 81, .04);
+    box-shadow: none;
 }
 .saved-program-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
 .saved-drawer .saved-program-link {
@@ -1628,7 +1623,7 @@ select, input, button {
     margin: 8px 0 0;
     padding: 5px 8px;
     border: 1px solid #d7e1e9;
-    border-radius: 50px;
+    border-radius: 4px;
     color: #456075;
     font-size: 11px;
     line-height: 1;
@@ -1652,7 +1647,7 @@ select, input, button {
     gap: 8px;
     padding: 11px 14px 14px;
     border-top: 1px solid #e3eaf0;
-    background: #f6f9fb;
+    background: #fff;
 }
 .saved-drawer-footer p { grid-column: 1 / -1; margin: 0; color: #65798a; font-size: 11px; }
 .saved-drawer .compare-open, .saved-drawer .export-btn {
