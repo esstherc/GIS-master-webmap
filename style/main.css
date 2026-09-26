@@ -1510,31 +1510,35 @@ select, input, button {
     z-index: 1005;
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    min-height: 46px;
-    padding: 9px 12px 9px 15px;
-    border: 1px solid #34495e;
-    border-radius: 6px;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 8px;
     background: #34495e;
     color: white;
-    box-shadow: 0 2px 8px rgba(15, 35, 55, 0.18);
-    font-size: 13px;
-    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    font-size: 14px;
+    font-weight: 500;
     font-family: inherit;
+    transition: all 0.3s ease;
     cursor: pointer;
 }
 .saved-launcher:hover, .saved-launcher[aria-expanded="true"] { background: #2c3e50; }
-.saved-launcher i { color: white; }
-.saved-launcher-count {
+.saved-launcher:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.saved-launcher i { color: white; font-size: 16px; }
+.saved-launcher #saved-count {
     display: inline-grid;
     place-items: center;
-    min-width: 25px;
-    height: 25px;
-    padding: 0 6px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
     border-radius: 50px;
     background: rgba(255,255,255,.18);
     color: white;
-    font-size: 12px;
+    font-size: 11px;
 }
 .saved-drawer[hidden], .saved-backdrop[hidden] { display: none; }
 .saved-backdrop { display: none; }
