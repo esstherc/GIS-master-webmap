@@ -213,6 +213,7 @@ body {
 }
 
 .popup-content {
+    min-width: 340px;
     max-width: 400px;
     max-height: 60vh; /* 限制最大高度 */
     overflow-y: auto; /* 允许垂直滚动 */
@@ -276,14 +277,23 @@ body {
     color: #666;
 }
 
-.program-details span {
-    display: inline-block;
-    margin-right: 15px;
-    margin-bottom: 3px;
+.program-details-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.program-details-top > span:not(.program-type-badge) {
+    flex: none;
+    white-space: nowrap;
+}
+
+.program-details-graduation {
+    margin-top: 4px;
+    line-height: 1.35;
 }
 
 .program-details .program-type-badge {
-    margin-right: 8px;
     padding: 2px 7px;
     border: 1px solid;
     border-radius: 3px;
@@ -674,23 +684,22 @@ select, input, button {
 
 /* User Notes Styles */
 .user-notes {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid #eee;
+    margin-top: 6px;
 }
+
+.user-notes .note-form { margin-top: 8px; }
 
 .note-buttons {
     display: flex;
-    gap: 8px;
-    margin-bottom: 8px;
+    gap: 6px;
 }
 
 .note-btn {
     background: #f8f9fa;
     border: 1px solid #dee2e6;
     border-radius: 4px;
-    padding: 4px 8px;
-    font-size: 12px;
+    padding: 3px 7px;
+    font-size: 11px;
     cursor: pointer;
     transition: all 0.2s;
 }
@@ -1323,6 +1332,7 @@ select, input, button {
 /* 移动端popup调整 */
 @media (max-width: 768px) {
     .popup-content {
+        min-width: 0;
         max-width: 280px;
         max-height: 70vh; /* 移动端更多空间 */
     }
@@ -1339,10 +1349,21 @@ select, input, button {
     .program-details {
         font-size: 0.8em;
     }
+
+    .program-details-top {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) minmax(0, 1.2fr);
+    }
+
+    .program-details-top > span:not(.program-type-badge) {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
     
     .note-btn {
         font-size: 11px;
-        padding: 3px 6px;
+        padding: 2px 6px;
     }
     
     .note-input textarea {
@@ -1374,6 +1395,8 @@ select, input, button {
     .program-details {
         font-size: 0.75em;
     }
+
+    .program-details-top { gap: 6px; }
 }
 
 /* Applied filters and mobile filter panel */

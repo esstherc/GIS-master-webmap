@@ -582,11 +582,12 @@
                             <a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(program.name || 'N/A')}</a>
                         </div>
                         <div class="program-details">
-                            <span class="program-type-badge program-type-${typeClass}">${escapeHtml(program.type || 'N/A')}</span>
-                            <span><strong>Format:</strong> ${escapeHtml(program.location || 'N/A')}</span>
-                            <br>
-                            <span><strong>Duration:</strong> ${escapeHtml(program.duration || 'N/A')}</span>
-                            <span><strong>Graduation:</strong> ${escapeHtml(program.graduation || 'N/A')}</span>
+                            <div class="program-details-top">
+                                <span class="program-type-badge program-type-${typeClass}">${escapeHtml(program.type || 'N/A')}</span>
+                                <span title="Format: ${escapeHtml(program.location || 'N/A')}"><strong>Format:</strong> ${escapeHtml(program.location || 'N/A')}</span>
+                                <span title="Duration: ${escapeHtml(program.duration || 'N/A')}"><strong>Duration:</strong> ${escapeHtml(program.duration || 'N/A')}</span>
+                            </div>
+                            <div class="program-details-graduation"><strong>Graduation:</strong> ${escapeHtml(program.graduation || 'N/A')}</div>
                         </div>
                         ${tracksHtml}
                         <div class="user-notes">
