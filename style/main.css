@@ -1670,7 +1670,7 @@ select, input, button {
 }
 .saved-drawer .saved-card {
     margin: 0 0 7px;
-    padding: 10px 11px 7px;
+    padding: 8px 10px 5px;
     border: 1px solid #dce3e8;
     border-radius: 12px;
     background: #fff;
@@ -1685,7 +1685,7 @@ select, input, button {
     margin: 0;
     color: #263f53;
     text-decoration: none;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
     line-height: 1.4;
     white-space: nowrap;
@@ -1693,20 +1693,21 @@ select, input, button {
 .saved-drawer .saved-program-link span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .saved-drawer .saved-program-link:hover span { text-decoration: underline; }
 .saved-drawer .saved-program-link i { flex: none; font-size: 11px; }
-.saved-drawer .saved-card-actions { display: flex; align-items: center; gap: 2px; margin: 6px 0 0; }
+.saved-drawer .saved-card-actions { display: flex; align-items: center; gap: 2px; margin: 4px 0 0; }
 .saved-drawer .saved-card-actions button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    min-height: 36px;
-    padding: 0 8px;
+    gap: 5px;
+    min-height: 30px;
+    padding: 0 6px;
     border: 0;
     border-radius: 20px;
     background: transparent;
     color: #526575;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
+    line-height: 1;
     white-space: nowrap;
 }
 .saved-drawer .saved-card-actions button:hover { background: #edf1f4; color: #263f53; }
@@ -1715,14 +1716,14 @@ select, input, button {
 .saved-drawer .compare-choice {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
-    min-height: 36px;
+    gap: 5px;
+    min-height: 30px;
     margin: 0;
-    padding: 0 8px;
+    padding: 0 6px;
     border: 1px solid transparent;
     border-radius: 20px;
     color: #526575;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
     line-height: 1.2;
     cursor: pointer;
@@ -1730,7 +1731,7 @@ select, input, button {
 .saved-drawer .compare-choice:hover { background: #edf1f4; }
 .saved-drawer .compare-choice:has(input:checked) { background: #e4ecf2; color: #263f53; }
 .saved-drawer .compare-choice:has(input:disabled) { opacity: .55; cursor: not-allowed; }
-.saved-drawer .compare-choice input { width: 16px; height: 16px; margin: 0; accent-color: #34495e; }
+.saved-drawer .compare-choice input { flex: none; width: 14px; height: 14px; margin: 0; accent-color: #34495e; }
 .saved-drawer :is(a, button, .compare-choice):focus-visible { outline: 2px solid #34495e; outline-offset: 2px; }
 .saved-drawer .saved-note-preview {
     display: -webkit-box;
