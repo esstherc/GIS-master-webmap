@@ -1683,6 +1683,7 @@ select, input, button {
     min-width: 0;
     overflow: hidden;
     margin: 0;
+    padding-left: 7px;
     color: #263f53;
     text-decoration: none;
     font-size: 12px;
@@ -1736,6 +1737,7 @@ select, input, button {
 .saved-drawer .saved-note-preview {
     display: -webkit-box;
     margin-top: 5px;
+    padding-left: 7px;
     overflow: hidden;
     color: #6a7884;
     font-size: 12px;
