@@ -13,6 +13,15 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style/main.css" />
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LN383N0FGJ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-LN383N0FGJ');
+    </script>
 </head>
 
 <body>
@@ -655,10 +664,20 @@
             showStatus.timeout = setTimeout(() => status.classList.remove('visible'), 3000);
         }
 
+        function trackEvent(name, params = {}) {
+            if (typeof gtag !== 'function') return;
+            gtag('event', name, params);
+        }
+
         function setSavedPanelOpen(open) {
             document.getElementById('saved-panel').hidden = !open;
             document.getElementById('saved-backdrop').hidden = !open;
             document.getElementById('saved-launcher').setAttribute('aria-expanded', String(open));
+            if (open) {
+                trackEvent('saved_programs_panel_open', {
+                    saved_count: savedPrograms.length
+                });
+            }
             if (open) {
                 document.getElementById('saved-close').focus();
             } else {
@@ -671,11 +690,19 @@
             if (index >= 0) {
                 savedPrograms.splice(index, 1);
                 showStatus('Removed from Saved Programs.');
+                trackEvent('saved_program_removed', {
+                    saved_count: savedPrograms.length
+                });
             } else {
                 const program = allData.find(item => programKey(item) === key);
                 if (!program) return;
                 savedPrograms.push({ ...program, programId: key, note: '', dateAdded: new Date().toISOString() });
                 showStatus('Added to Saved Programs.');
+                trackEvent('program_saved', {
+                    saved_count: savedPrograms.length,
+                    program_type: program['program type'] || 'Unknown',
+                    format: program.location || 'Unknown'
+                });
             }
             saveStoredPrograms();
             refreshOpenPopup();
@@ -693,6 +720,9 @@
             saveStoredPrograms();
             refreshOpenPopup();
             showStatus('Note saved.');
+            trackEvent('program_note_saved', {
+                saved_count: savedPrograms.length
+            });
         }
 
         function refreshOpenPopup() {
@@ -783,6 +813,9 @@
             document.getElementById('compareModal').hidden = false;
             document.body.style.overflow = 'hidden';
             document.getElementById('compare-close').focus();
+            trackEvent('saved_programs_compare_open', {
+                compare_count: programs.length
+            });
         }
 
         function closeComparison() {
@@ -820,6 +853,9 @@
                 downloadCSV(csvContent, 'saved_programs.csv');
                 
                 showStatus(`Downloaded ${savedPrograms.length} saved programs.`);
+                trackEvent('saved_programs_csv_download', {
+                    saved_count: savedPrograms.length
+                });
 
             } catch (error) {
                 console.error('Export failed:', error);
