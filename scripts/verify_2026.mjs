@@ -10,8 +10,8 @@ const programRows = readFileSync(join(root, 'data/all_msgis_institutions_2026.cs
 const coordinateRows = readFileSync(join(root, 'data/universities_coordinates_2026.csv'), 'utf8').trimEnd().split(/\r?\n/);
 const trackRows = readFileSync(join(root, 'data/program_tracks_2026.csv'), 'utf8').trimEnd().split(/\r?\n/);
 
-assert.equal(programRows.length - 1, 174);
-assert.equal(coordinateRows.length - 1, 140);
+assert.equal(programRows.length - 1, 175);
+assert.equal(coordinateRows.length - 1, 141);
 assert.equal(trackRows.length - 1, 3);
 for (const filename of ['all_msgis_institutions_2026.csv', 'universities_coordinates_2026.csv', 'program_tracks_2026.csv']) {
     assert.ok(html.includes(`data/${filename}`), `${filename} is not loaded by the website`);
@@ -22,7 +22,7 @@ const tracks = trackRows.slice(1).map(line => {
     return { Institution, Program, Track, link };
 });
 const start = html.indexOf('function escapeHtml(value)');
-const end = html.indexOf('// Simple CSV export functionality', start);
+const end = html.indexOf('// Keep the 2025 browser data', start);
 assert.ok(start !== -1 && end > start);
 const popupFunctions = html.slice(start, end);
 const data = {
@@ -36,16 +36,20 @@ const data = {
         location: 'online',
         duration: '36 cr',
         graduation: 'non-thesis',
+        key: 'Liberty University\u001fMS Geographic Information Systems',
         tracks,
     }],
 };
 const popup = vm.runInNewContext(`${popupFunctions}\ncreatePopupContent(data)`, {
     data,
     colorMap: { professional: '#56B4E9', default: '#ffaa00' },
+    matchingProgramKeys: new Set(['Liberty University\u001fMS Geographic Information Systems']),
+    savedPrograms: [],
+    TYPE_ORDER: ['professional', 'research', 'mixed'],
 });
 for (const track of tracks) {
     assert.ok(popup.includes(track.Track.replace('&', '&amp;')), `${track.Track} is missing from popup`);
     assert.ok(popup.includes(track.link), `${track.Track} link is missing from popup`);
 }
-assert.ok(popup.includes('Total Programs:</strong> 1'));
+assert.ok(popup.includes('1 of 1 Matching Programs'));
 console.log('2026 data paths, counts, and Liberty track popup: OK');

@@ -6,10 +6,10 @@ Updated September 25, 2026. This report compares the 2026 map inventory with its
 
 | Measure | 2025 | 2026 | Net change |
 |---|---:|---:|---:|
-| Master's program records | 176 | 174 | −2 |
-| Institutions represented | 142 | 140 | −2 |
+| Master's program records | 176 | 175 | −1 |
+| Institutions represented | 142 | 141 | −1 |
 
-The program total reflects **four additions and six removals**. Two institutions were added to the map, and four institutions no longer have a program in the inventory. A degree with several tracks counts as one program; Liberty University's GIS MS has three tracks but one program record.
+The program total reflects **five additions and six removals**. Three institutions were added to the map, and four institutions no longer have a program in the inventory. A degree with several tracks counts as one program; Liberty University's GIS MS has three tracks but one program record.
 
 ## Important changes
 
@@ -21,6 +21,7 @@ The program total reflects **four additions and six removals**. Two institutions
 | [Colorado School of Mines](https://www.mines.edu/academics/graduate-academics/gis-and-geoinformatics-msnt/) | MS GIS and Geoinformatics (Non-Thesis) | Added a previously unlisted institution and its online master's program. |
 | [Liberty University](https://catalog.liberty.edu/graduate/colleges-schools/arts-sciences/geographic-information-systems-ms/) | MS Geographic Information Systems | Added one degree alongside the existing Geography MA. Its three tracks are [Cartography & Remote Sensing](https://catalog.liberty.edu/graduate/colleges-schools/arts-sciences/geographic-information-systems-ms/cartography-remote-sensing/), [Commercial Logistics](https://catalog.liberty.edu/graduate/colleges-schools/arts-sciences/geographic-information-systems-ms/commercial-logistics/), and [Geospatial Intelligence](https://catalog.liberty.edu/graduate/colleges-schools/arts-sciences/geographic-information-systems-ms/geospatial-intelligence/). |
 | [The City College of New York](https://www.ccny.cuny.edu/sustainability/joint-unu-ccny-ms) | MS Sustainability in the Urban Environment, joint UNU–CCNY pathway with a Geospatial Data Sciences focus | Added a previously unlisted institution. The school announced this joint pathway for Fall 2026. |
+| [Tennessee Technological University](https://www.tntech.edu/majors/professional-science-masters_environmental-informatics.php#degree) | Master of Professional Science in Environmental Informatics | Added a previously unlisted institution and its Environmental Informatics master's pathway. |
 
 ### Sunset or removed programs
 
