@@ -43,6 +43,8 @@ UPDATES = {
           "Program": "MS Geography (Geographic Information Science focus)"},
     162: {"link": "https://degrees.ecu.edu/degree/geography-and-environment-ms/",
           "Program": "MS Geography and Environment (Geography concentration: geospatial techniques)"},
+    163: {"link": "https://www.indianastate.edu/academics/academic-program-finder/geoscience-ms",
+          "Program": "MS Geoscience"},
     166: {"link": "https://geography.ucdavis.edu/academic-programs"},
 }
 
@@ -90,6 +92,34 @@ NEW_PROGRAMS = [
         "program type": "mixed",
         "institution type": "GIS Concentration",
     },
+    {
+        "Institution": "Tennessee Technological University",
+        "id": "186",
+        "link": "https://www.tntech.edu/majors/professional-science-masters_environmental-informatics.php#degree",
+        "coursework": "",
+        "Program": "Master of Professional Science in Environmental Informatics",
+        "graduation requirement": "thesis or non-thesis",
+        "internship": "/",
+        "location": "hybrid",
+        "pathway": "/",
+        "duration": "30 cr",
+        "program type": "professional",
+        "institution type": "GIS Concentration",
+    },
+    {
+        "Institution": "University of California-Santa Cruz",
+        "id": "187",
+        "link": "https://envs.ucsc.edu/academics/ma-program/",
+        "coursework": "https://envs.ucsc.edu/advising/ma-advising/",
+        "Program": "MA Geographic Information Systems, Spatial Technologies, Applications, and Research (GISTAR)",
+        "graduation requirement": "non-thesis (capstone project)",
+        "internship": "/",
+        "location": "on-site",
+        "pathway": "/",
+        "duration": "2 years",
+        "program type": "professional",
+        "institution type": "1 GIS Program",
+    },
 ]
 
 
@@ -131,6 +161,22 @@ NEW_COORDINATES = [
         "Address": "160 Convent Avenue, New York, NY 10031, United States of America",
         "State": "NY",
         "City": "New York City",
+    },
+    {
+        "University": "Tennessee Technological University",
+        "Latitude": "36.17628",
+        "Longitude": "-85.50464",
+        "Address": "1 William L Jones Dr, Cookeville, TN 38505, United States of America",
+        "State": "TN",
+        "City": "Cookeville",
+    },
+    {
+        "University": "University of California-Santa Cruz",
+        "Latitude": "36.99139",
+        "Longitude": "-122.06087",
+        "Address": "University of California, Santa Cruz, 1156 High Street, Santa Cruz, CA 95064, United States of America",
+        "State": "CA",
+        "City": "Santa Cruz",
     },
 ]
 
@@ -181,8 +227,8 @@ def main() -> None:
     for number, row in enumerate(revised, start=1):
         row["program count"] = str(number)
 
-    assert len(revised) == 174
-    assert len({row["Institution"] for row in revised}) == 140
+    assert len(revised) == 176
+    assert len({row["Institution"] for row in revised}) == 142
     assert Counter(row["Institution"] for row in revised)["University of Utah"] == 2
     assert Counter(row["Institution"] for row in revised)["Liberty University"] == 2
     assert all(row["Institution"] not in {
@@ -211,7 +257,7 @@ def main() -> None:
     active_schools = {row["Institution"] for row in revised}
     revised_coordinates = [row for row in coordinates if row["University"] in active_schools]
     revised_coordinates.extend(NEW_COORDINATES)
-    assert len(revised_coordinates) == 140
+    assert len(revised_coordinates) == 142
     assert {row["University"] for row in revised_coordinates} == active_schools
     with COORD_OUTPUT.open("w", encoding="utf-8", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=coordinate_fields, lineterminator="\n")
@@ -223,7 +269,7 @@ def main() -> None:
     print(f"2026 inventory: {OUTPUT}")
     print(f"2026 coordinates: {COORD_OUTPUT}")
     print(f"2026 tracks: {TRACK_OUTPUT}")
-    print(f"Rows: {len(original)} -> {len(revised)}; institutions: 142 -> 140")
+    print(f"Rows: {len(original)} -> {len(revised)}; institutions: 142 -> 142")
 
 
 if __name__ == "__main__":

@@ -10,8 +10,8 @@ const programRows = readFileSync(join(root, 'data/all_msgis_institutions_2026.cs
 const coordinateRows = readFileSync(join(root, 'data/universities_coordinates_2026.csv'), 'utf8').trimEnd().split(/\r?\n/);
 const trackRows = readFileSync(join(root, 'data/program_tracks_2026.csv'), 'utf8').trimEnd().split(/\r?\n/);
 
-assert.equal(programRows.length - 1, 175);
-assert.equal(coordinateRows.length - 1, 141);
+assert.equal(programRows.length - 1, 176);
+assert.equal(coordinateRows.length - 1, 142);
 assert.equal(trackRows.length - 1, 3);
 for (const filename of ['all_msgis_institutions_2026.csv', 'universities_coordinates_2026.csv', 'program_tracks_2026.csv']) {
     assert.ok(html.includes(`data/${filename}`), `${filename} is not loaded by the website`);

@@ -8,7 +8,7 @@ Live map: https://yanbingchen.site/GIS-master-webmap/
 
 ## 2026 Data Update
 
-The September 2026 inventory includes **175 master's program records across 141 institutions**.
+The October 2026 inventory includes **176 master's program records across 142 institutions**.
 
 The 2026 update reviewed current university websites and catalogs, added newly identified programs, removed sunset programs, updated outdated links, and refined program names where needed.
 

@@ -51,12 +51,12 @@ try {
   let count;
   for (let attempt = 0; attempt < 50; attempt++) {
     try { count = await evaluate('allData.length'); } catch {}
-    if (count === 174) break;
+    if (count === 176) break;
     await new Promise(resolve => setTimeout(resolve, 200));
   }
-  if (count !== 174) throw new Error(`Expected 174 programs, got ${count}`);
+  if (count !== 176) throw new Error(`Expected 176 programs, got ${count}`);
   const cards = await evaluate("document.querySelectorAll('.result-card').length");
-  if (cards !== 174) throw new Error(`Expected 174 results, got ${cards}`);
+  if (cards !== 176) throw new Error(`Expected 176 results, got ${cards}`);
   const launcherBounds = await evaluate("[document.getElementById('saved-launcher').getBoundingClientRect().bottom,innerHeight]");
   if (launcherBounds[0] > launcherBounds[1]) throw new Error(`Saved launcher below desktop viewport: ${launcherBounds}`);
 
